@@ -1,6 +1,6 @@
 ---
-title: "Project Title"
-author: "Your Names"
+title: "Global climate heading in a Wrong Direction: Mechanism behind the occurrence of climatic change and analysis of Children Climate risk index"
+author: "Victor & Floriann"
 format: 
   html:
     toc: true                   # This creates the table of context menu
@@ -34,11 +34,27 @@ Detailed project report
 
 ## Outline
 
+
+
 *What questions will the report address and why?*
 
+1. What is the mechanism behind the occurrence of climatic change?
+	- Emissions of greenhouse gases over a period of time around the world
+	- Trend in atmospheric concentrations of CO2
+	- Energy consuming of countries in terms of economy at current GDP
+	- Who are the largest emitters over the period
+	- Sea level and glaciers role in climate change
+2. How are children vulnerable to change in climate with respective to Children Climate risk index data globally.
+
 *How can data be accessed. Code for loading.*
+The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
+*Link: <https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions>*
+
 
 *Information how data is collected. Who collects data.*
+The data produced by third parties and made available by Our World in Data.
+Last update of the data was on September 6, 2022
+The data is updated regularly. Most metrics are published on an annual basis and contains all the information on CO2 and Greenhouse Gas Emissions.
 
 *Be very brief here, if necessary provide and refer to an appendix. You can also use footnotes.^[This is a footnote, which can be used for more information which maybe a reader.]*
 
