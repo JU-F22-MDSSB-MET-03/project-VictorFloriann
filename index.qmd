@@ -19,9 +19,6 @@ bibliography: references.bib
 library(tidyverse)
 ```
 
-
-This slide deck presents the main insights:
-
 ```{=html}
 <iframe class="slide-deck" style="border:1px solid lightgray;" width="100%" height="500" src="presentation.html"></iframe>
 ```
@@ -30,44 +27,41 @@ This slide deck presents the main insights:
 
 Detailed project report
 
-*The following headlines are suggestions only.*
-
 ## Outline
 
 *Climate Science* has become an intimidating subject matter which is drawing attention in recent days.
 It is evident that human activities are driving the global warming since mid-20th century. The industrial activities that our modern civilization has taken up leads to raised atmospheric carbon dioxide levels.
-
+<br>
 UN Climate change states that the past seven years were the warmest on record. Countries that host billions of people and are responsible for up to 70% of human-caused emissions are predicted to get affected the most. This leads to increasing socio-economic impacts. The most vulnerable populations will suffer most, due to extreme weather in different parts of the world. 
-
-Climate impacts heading into uncharted territory of destruction leading to many natural calamities and  increasingly devastating. This report will unveil the most inquisitive questions arising which are the cause and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. 
-
-*What questions will the report address and why?*
+<br>
+Climate impacts heading into uncharted territory of destruction leading to many natural calamities and  increasingly devastating. This report will unveil the most inquisitive questions arising which are the cause and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. This study will address the following questions,
+<br>
 1. What is the mechanism behind the occurrence of climatic change?
 	- Emissions of greenhouse gases over a period of time due to industrial revolution.
 	- Descriptive statistics on factor facilitating Climate change.
 2. Study the trend in natural disaster due to global warming.
 3. Analysis on children vulnerability to climatic change with respective to Children Climate risk index(CCRI) data.
 
-*How can data be accessed. Code for loading.*
+**Data Source**
+<br>
 The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
-R
-Github
-1. Emission levels
-	  Link : *<https://github.com/owid/co2-data>*
-	  Latest Year : 2019
-	  Observations : 26009
-2. Natural disaster
-	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>*
-	  Latest Year : 2019
-	  Observations: 1605
-3. Global temperature anomaly
-	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>*
-	  Observations: 1605
-4. CCRI
-    Link : *<>*
-    Observations: 681
+Data source will be accessed by from Github API with *R* language.
+<br>
+1. Emission levels <br>
+	  Link : *<https://github.com/owid/co2-data>* <br>
+	  Latest Year : 2019 <br>
+	  Observations : 26009 <br>
+2. Natural disaster <br>
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
+	  Latest Year : 2019 <br>
+	  Observations: 1605 <br>
+3. Global temperature anomaly <br>
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
+	  Observations: 1605 <br>
+4. CCRI <br>
+    Link : *<>* <br>
+    Observations: 681 <br>
 
-*Information how data is collected. Who collects data.*
 The data we are using in this study is extracted from *Our World in Data (OWID)*.
 The data produced by is collected by UN, NASA and made available by Our World in Data. 
 
@@ -90,7 +84,7 @@ Also a check for copyright or data privacy violations is necessary.
 
 ## Main visualization of the data 
 
-*Better give a more substantial title.*
+*Visualization 1*
 
 This should present you main point visually with one (or more) figures.
 
@@ -109,11 +103,9 @@ mpg |> ggplot(aes(displ, hwy)) + geom_point()
 
 ## Additional visualizations and further analyses with the data
 
-*Better give a more substantial title.*
+### Subsection 1:
 
-### You may have subsections here or elsewhere
-
-### However, subsections usually make sense when there is more than one
+### Subsection 2:
 
 ## Conclusion
 
