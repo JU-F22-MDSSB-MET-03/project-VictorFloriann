@@ -34,26 +34,45 @@ Detailed project report
 
 ## Outline
 
+*Climate Science* has become an intimidating subject matter which is drawing attention in recent days.
+It is evident that human activities are driving the global warming since mid-20th century. The industrial activities that our modern civilization has taken up leads to raised atmospheric carbon dioxide levels.
 
+UN Climate change states that the past seven years were the warmest on record. Countries that host billions of people and are responsible for up to 70% of human-caused emissions are predicted to get affected the most. This leads to increasing socio-economic impacts. The most vulnerable populations will suffer most, due to extreme weather in different parts of the world. 
+
+Climate impacts heading into uncharted territory of destruction leading to many natural calamities and  increasingly devastating. This report will unveil the most inquisitive questions arising which are the cause and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. 
 
 *What questions will the report address and why?*
-
 1. What is the mechanism behind the occurrence of climatic change?
-	- Emissions of greenhouse gases over a period of time around the world
-	- Trend in atmospheric concentrations of CO2
-	- Energy consuming of countries in terms of economy at current GDP
-	- Who are the largest emitters over the period
-	- Sea level and glaciers role in climate change
-2. How are children vulnerable to change in climate with respective to Children Climate risk index data globally.
+	- Emissions of greenhouse gases over a period of time due to industrial revolution.
+	- Descriptive statistics on factor facilitating Climate change.
+2. Study the trend in natural disaster due to global warming.
+3. Analysis on children vulnerability to climatic change with respective to Children Climate risk index(CCRI) data.
 
 *How can data be accessed. Code for loading.*
 The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
-*Link: <https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions>*
-
+R
+Github
+1. Emission levels
+	  Link : *<https://github.com/owid/co2-data>*
+	  Latest Year : 2019
+	  Observations : 26009
+2. Natural disaster
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>*
+	  Latest Year : 2019
+	  Observations: 1605
+3. Global temperature anomaly
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>*
+	  Observations: 1605
+4. CCRI
+    Link : *<>*
+    Observations: 681
 
 *Information how data is collected. Who collects data.*
-The data produced by third parties and made available by Our World in Data.
-Last update of the data was on September 6, 2022
+The data we are using in this study is extracted from *Our World in Data (OWID)*.
+The data produced by is collected by UN, NASA and made available by Our World in Data. 
+
+Last update of the data was on September 6, 2022.
+
 The data is updated regularly. Most metrics are published on an annual basis and contains all the information on CO2 and Greenhouse Gas Emissions.
 
 *Be very brief here, if necessary provide and refer to an appendix. You can also use footnotes.^[This is a footnote, which can be used for more information which maybe a reader.]*
@@ -68,7 +87,6 @@ Remove all this text and put you content.^[Using this template is not mandatory.
 If the final report has sufficient quality, it can be published to the web directly from here, if you want. 
 Also a check for copyright or data privacy violations is necessary.
 :::
-
 
 ## Main visualization of the data 
 
@@ -108,9 +126,6 @@ mpg |> ggplot(aes(displ, hwy)) + geom_point()
 *Interactive visualizations may also appear above.* 
 
 *The focus here is to provide the reader with sensible ways to explore the data independently. You have to think about what could be of interest.*
-
-
-
 
 ## Data Source {.appendix}
 
