@@ -28,19 +28,25 @@ library(tidyverse)
 Detailed project report
 
 ## Outline
-
+<p align='justify'>
 *Climate Science* has become an intimidating subject matter which is drawing attention in recent days.
 It is evident that human activities are driving the global warming since mid-20th century. The industrial activities that our modern civilization has taken up leads to raised atmospheric carbon dioxide levels.
+</p>
 <br>
+<p align='justify'>
 UN Climate change states that the past seven years were the warmest on record. Countries that host billions of people and are responsible for up to 70% of human-caused emissions are predicted to get affected the most. This leads to increasing socio-economic impacts. The most vulnerable populations will suffer most, due to extreme weather in different parts of the world. 
+</p>
 <br>
+<p align='justify'>
 Climate impacts heading into uncharted territory of destruction leading to many natural calamities and  increasingly devastating. This report will unveil the most inquisitive questions arising which are the cause and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. This study will address the following questions,
-<br>
+</p>
+<p align='justify'>
 1. What is the mechanism behind the occurrence of climatic change?
 	- Emissions of greenhouse gases over a period of time due to industrial revolution.
 	- Descriptive statistics on factor facilitating Climate change.
 2. Study the trend in natural disaster due to global warming.
 3. Analysis on children vulnerability to climatic change with respective to Children Climate risk index(CCRI) data.
+</p>
 
 **Data Source**
 <br>
@@ -49,25 +55,10 @@ Data source will be accessed by from Github API with *R* language.
 <br>
 1. Emission levels <br>
 	  Link : *<https://github.com/owid/co2-data>* <br>
-	  Latest Year : 2019 <br>
-	  Observations : 26009 <br>
 2. Natural disaster <br>
 	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
-	  Latest Year : 2019 <br>
-	  Observations: 1605 <br>
 3. Global temperature anomaly <br>
 	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
-	  Observations: 1605 <br>
-4. CCRI <br>
-    Link : *<>* <br>
-    Observations: 681 <br>
-
-The data we are using in this study is extracted from *Our World in Data (OWID)*.
-The data produced by is collected by UN, NASA and made available by Our World in Data. 
-
-Last update of the data was on September 6, 2022.
-
-The data is updated regularly. Most metrics are published on an annual basis and contains all the information on CO2 and Greenhouse Gas Emissions.
 
 *Be very brief here, if necessary provide and refer to an appendix. You can also use footnotes.^[This is a footnote, which can be used for more information which maybe a reader.]*
 
@@ -84,32 +75,20 @@ Also a check for copyright or data privacy violations is necessary.
 
 ## Main visualization of the data 
 
-*Visualization 1*
+### Countries with least greenhouse gas emission will be more vulnerable to climate change*
 
-This should present you main point visually with one (or more) figures.
-
-```{r}
-#| label: fig-mainvisualization
-#| fig-cap: "The figure shows this ... (but is just a placeholder)."
-mpg |> ggplot(aes(displ, hwy)) + geom_point()
-```
-
-@fig-mainvisualization shows the insight.
-
-*Refer here to*
-
-- *Additional visualizations and analysis below*
-- *Interactive Visualization / Dashboard below*
+### Seasonality in global temperature anomaly*
 
 ## Additional visualizations and further analyses with the data
 
-### Subsection 1:
-
-### Subsection 2:
+### Trend analysis of country emission level:
+  
+### Children Climate Risk Index:
 
 ## Conclusion
-
-*Topics like: What have we learned? How does it fit in or help in broader contexts? What remains open?*
+<p align='justify'>
+The world is entering uncharted waters as climate change drives unprecedented global environmental, societal, and economic disruption. Exploring and analyzing the greenhouse gas emitters due to industrial revolution, we can protect and support those who are vulnerable, especially the children.
+</p>
 
 ## Interactive Visualization / Data Dashboard {.appendix}
 
@@ -120,8 +99,31 @@ mpg |> ggplot(aes(displ, hwy)) + geom_point()
 *The focus here is to provide the reader with sensible ways to explore the data independently. You have to think about what could be of interest.*
 
 ## Data Source {.appendix}
+<p align='justify'>
+The data used for this study is extracted from *Our World in Data (OWID)*.
+The data produced by is collected by UN, World Resources Institute , NASA and made available by Our World in Data. 
+</p>
+1. Emission levels <br>
+	  Link : *<https://github.com/owid/co2-data>* <br>
+	  Latest Year : 2019 <br>
+	  Observations : 26009 <br>
+	  Variables:  40 <br>
+	  Last update: September 6, 2022<br>
+	  
+2. Natural disaster <br>
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
+	  Latest Year : 2019 <br>
+	  Observations: 1605 <br>
+	  Variables: 40 <br>
+	  Last update: 2021 <br>
+	  
+3. Global temperature anomaly <br>
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
+	  Observations: 1605 <br>
+	  Variables: 5 <br>
+	  Last update: 2019 <br>
 
-*If specific information and details about the data source would be too long in the "Outline" section, put it in an appendix section.* 
+The data is updated regularly and most metrics are published on an annual basis.
 
 ## Other appendix sections {.appendix}
 
@@ -129,5 +131,6 @@ mpg |> ggplot(aes(displ, hwy)) + geom_point()
 
 ## References {.unnumbered .appendix}
 
-::: {#refs}
+::: {}
+
 :::
