@@ -6,9 +6,18 @@ format:
     slide-number: true
 ---
 
+## Climate changes
+
+![Climate_Changes](img/Slide2.png)
+
 ## Climate Risks
 
-![Climate_change.](https://visme.co/blog/wp-content/uploads/climate-risks-1.5-degree-vs-2-degree-global-warming-climate-change-facts-infographic.jpg){#fig-Climate_change}
-## Visualizations for story telling
+![Climate_Risks.](https://visme.co/blog/wp-content/uploads/climate-risks-1.5-degree-vs-2-degree-global-warming-climate-change-facts-infographic.jpg)
 
-![Visuals.](img/Other_info.png){#fig-Visuals}
+## Industrialization
+
+![Industrialization](img/Slide3.png)
+
+## Children Climate Index
+
+![CCRI](img/Slide4.png)
