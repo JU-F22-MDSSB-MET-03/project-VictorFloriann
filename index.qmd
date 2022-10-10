@@ -17,7 +17,10 @@ bibliography: references.bib
 
 # These are the packages used in the report
 library(tidyverse)
+library(readr)
 ```
+
+This slide deck presents the main insights:
 
 ```{=html}
 <iframe class="slide-deck" style="border:1px solid lightgray;" width="100%" height="500" src="presentation.html"></iframe>
@@ -32,13 +35,11 @@ Detailed project report
 *Climate Science* has become an intimidating subject matter which is drawing attention in recent days.
 It is evident that human activities are driving the global warming since mid-20th century. The industrial activities that our modern civilization has taken up leads to raised atmospheric carbon dioxide levels.
 </p>
-<br>
 <p align='justify'>
-UN Climate change states that the past seven years were the warmest on record. Countries that host billions of people and are responsible for up to 70% of human-caused emissions are predicted to get affected the most. This leads to increasing socio-economic impacts. The most vulnerable populations will suffer most, due to extreme weather in different parts of the world. 
+UN Climate change states that the past seven years were the warmest on record. Countries that host billions of people and are responsible for up to 70% of human-caused emissions are predicted to get affected the most. This leads to increasing socio-economic impacts. Consequently, making populations vulnerable to extreme weather in different parts of the world. 
 </p>
-<br>
 <p align='justify'>
-Climate impacts heading into uncharted territory of destruction leading to many natural calamities and  increasingly devastating. This report will unveil the most inquisitive questions arising which are the cause and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. This study will address the following questions,
+Climate impacts heading into uncharted territory of destruction by increasingly devastating and leading to many natural calamities. This report will unveil the most inquisitive questions arising which causes and mechanism in global warming along with the human activities leading to natural changes in the environment.  As a consequence how humankind is affected, especially children. This study will address the following questions,
 </p>
 <p align='justify'>
 1. What is the mechanism behind the occurrence of climatic change?
@@ -51,52 +52,48 @@ Climate impacts heading into uncharted territory of destruction leading to many 
 **Data Source**
 <br>
 The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
-Data source will be accessed by from Github API with *R* language.
+Data source will be accessed by from Github API with *R* language. There are 3 datasets which will be used for this study, namely
 <br>
-1. Emission levels <br>
+1. Emission levels data<br>
 	  Link : *<https://github.com/owid/co2-data>* <br>
-2. Natural disaster <br>
+2. Natural disaster data<br>
 	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
-3. Global temperature anomaly <br>
+3. Global temperature anomaly data<br>
 	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
 
-*Be very brief here, if necessary provide and refer to an appendix. You can also use footnotes.^[This is a footnote, which can be used for more information which maybe a reader.]*
-
-Your report shall follow an "inverted pyramid" story format [see @Dykes2019EffectiveDataStorytelling] as shown in @fig-dykesstoryformats .
-
-![Story formats.](img/dykes_storyformats.png){#fig-dykesstoryformats}
-
-Remove all this text and put you content.^[Using this template is not mandatory.]
-
-:::{.callout-note}
-If the final report has sufficient quality, it can be published to the web directly from here, if you want. 
-Also a check for copyright or data privacy violations is necessary.
-:::
+Code to extract data:
+```{r}
+#Code to extract data:
+#co2_data <- read_csv('https://nyc3.digitaloceanspaces.com/owid-public/data/co2/owid-co2-data.csv')
+#head(co2_data)
+```
 
 ## Main visualization of the data 
 
-### Countries with least greenhouse gas emission will be more vulnerable to climate change*
+### Countries with least greenhouse gas emission will be more vulnerable to climate change
 
-### Seasonality in global temperature anomaly*
+[![Global greenhouse gas emissions](https://ourworldindata.org/uploads/2020/09/Emissions-by-sector-–-pie-charts.png)](https://ourworldindata.org/ghg-emissions-by-sector)
+
+<p align='justify'>
+Globally, we emit around 50 billion tonnes of greenhouse gases each year. To prevent severe climate change we need to rapidly reduce global greenhouse gas emissions. Analyzing the this, we could effectively reduce emissions to prevent climate change.
+</p>
+
+### Seasonality in global temperature anomaly
+
+![Global temperature](img/Global-temperature-change-climate-change-facts-infographic.gif)
+
+<p align='justify'>
+This visualization illustrates the warming in a series of circles, each one portraying a year in the historical climate record spanning 1850 to 2016. As time passes and the planet warms, the circles expand outward
+</p>
 
 ## Additional visualizations and further analyses with the data
-
-### Trend analysis of country emission level:
-  
-### Children Climate Risk Index:
+1. Trend analysis of each country emission level
+2. Children Climate Risk Index
 
 ## Conclusion
 <p align='justify'>
-The world is entering uncharted waters as climate change drives unprecedented global environmental, societal, and economic disruption. Exploring and analyzing the greenhouse gas emitters due to industrial revolution, we can protect and support those who are vulnerable, especially the children.
+The world is entering unprecedented era as climate change drives unprecedented global environmental, societal, and economic disruption. Exploring and analyzing the greenhouse gas emitters due to industrial revolution, while taking proper measures we can protect and support the society, especially the children.
 </p>
-
-## Interactive Visualization / Data Dashboard {.appendix}
-
-*Either have this here or on another webpage (new quarto file).*
-
-*Interactive visualizations may also appear above.* 
-
-*The focus here is to provide the reader with sensible ways to explore the data independently. You have to think about what could be of interest.*
 
 ## Data Source {.appendix}
 <p align='justify'>
@@ -125,12 +122,10 @@ The data produced by is collected by UN, World Resources Institute , NASA and ma
 
 The data is updated regularly and most metrics are published on an annual basis.
 
-## Other appendix sections {.appendix}
-
-*Do the same with other text which distracts the reading of the main text. *
-
 ## References {.unnumbered .appendix}
 
 ::: {}
+James H. Stock, *Climate Change, Climate Policy, and Economic Growth, July 1, 2019* <https://heep.hks.harvard.edu/files/heep/files/dp_85_stock.pdf>
 
+Luís Roberto Barroso, *TECHNOLOGICAL REVOLUTION, DEMOCRATIC RECESSION AND CLIMATE CHANGE: THE LIMITS OF LAW IN A CHANGING WORLD,2019*, https://carrcenter.hks.harvard.edu/files/cchr/files/ccdp_2019_009_technology_democracy.pdf
 :::

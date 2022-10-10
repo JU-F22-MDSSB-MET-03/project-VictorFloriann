@@ -6,9 +6,9 @@ format:
     slide-number: true
 ---
 
-## Most important information
+## Climate Risks
 
-## Supporting information
+![Climate_change.](https://visme.co/blog/wp-content/uploads/climate-risks-1.5-degree-vs-2-degree-global-warming-climate-change-facts-infographic.jpg){#fig-Climate_change}
+## Visualizations for story telling
 
-## Other details
-![](img/dykes_storyformats.png){fig-align="center"}
+![Visuals.](img/Other_info.png){#fig-Visuals}
