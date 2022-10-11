@@ -18,6 +18,6 @@ format:
 
 ![Industrialization](img/Slide3.png)
 
-## Children Climate Index
+## Children Climate Risk Index
 
 ![CCRI](img/Slide4.png)
