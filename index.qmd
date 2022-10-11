@@ -70,7 +70,7 @@ Code to extract data:
 
 ## Main visualization of the data 
 
-### Countries with least greenhouse gas emission will be more vulnerable to climate change
+### Global greenhouse gas emissions as per each sectors
 
 [![Global greenhouse gas emissions](https://ourworldindata.org/uploads/2020/09/Emissions-by-sector-–-pie-charts.png)](https://ourworldindata.org/ghg-emissions-by-sector)
 
