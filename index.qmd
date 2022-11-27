@@ -26,6 +26,10 @@ library(skimr)
 library("zoo")
 library(plotly) #world map
 library(ggridges)
+#suppressWarnings
+#suppressMessages
+options(warn=-1)
+#options(error = expression(NULL))
 ```
 
 This slide deck presents the main insights:
@@ -62,7 +66,7 @@ Climate impacts heading into uncharted territory of destruction by increasingly 
 The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
 Data source will be accessed by from Github API with *R* language. There are 3 datasets which will be used for this study, namely
 <br>
-1. Emission levels data<br>
+1. Emission levels data and temperature<br>
 	  --Link : *<https://github.com/owid/co2-data>* <br>
 	  Link : Kaggle
 	  Link : *<>*
@@ -100,7 +104,7 @@ dim(natural_disaster_data)
 ##Checking NA values in the dataset
 apply(is.na(climate_change),2, sum)
 apply(is.na(cceri_data),2, sum)
-apply(is.na(natural_disaster_data),2, sum)
+#apply(is.na(natural_disaster_data),2, sum)
 ```
 
 ## Main visualization of the data 
@@ -116,7 +120,7 @@ ggplot(climate_change, aes(year_date, Temp)) +
   geom_line(color = "orange", lwd = .8) + 
   geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
   labs(title = "Rise in Temperature",
-       subtitle = "Monthly rise in temperatures from 1985 to 2010",
+       subtitle = "Monthly rise in temperatures from 1985 to 2022",
        x = "Year", 
        y = "Temperature") +
   theme_minimal() +
@@ -129,6 +133,35 @@ ggplot(climate_change, aes(year_date, Temp)) +
 <p align='justify'>
 Observation : 
 
+</p>
+
+```{r message=FALSE}
+#Visual 6: Temperature anamoly
+
+# adding right and left hand sided labels
+climate_change <- climate_change %>%
+  mutate(label_rt = if_else(Month == 12 & Year%%2 == 0, 
+                            as.character(Year), NA_character_)) %>%
+  mutate(label_lt = if_else(Month == 1 & Year%%2 != 0, 
+                            as.character(Year), NA_character_))
+
+
+ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) + 
+  geom_density_ridges_gradient(aes(fill = ..x..), 
+                               scale = 3, size = 0.3, alpha = 0.) +
+  geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted") +
+  scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
+                       name = "Temp") +
+  labs(title = 'Temperature density',
+       subtitle = "Temperature is difference in degrees Celsius between the \n average global temperature in that period and a reference value") + 
+  theme(legend.position = c(0.9,0.2)) +
+  xlab("Temperature") + 
+  ylab("Year") + 
+  theme_classic()
+```
+
+<p align='justify'>
+Observation:
 </p>
 
 ### Natural disaster - affected/death and injured
@@ -377,35 +410,6 @@ cc_eri_data_new_high <- cc_eri_data_new  %>% top_n(10)
 ggplot(data = cc_eri_data_new_high, aes(x = Geographic.area, y = Heatwaves)) + 
   geom_bar(stat = 'identity', fill = 'darkred') +
   coord_flip()
-```
-
-<p align='justify'>
-Observation:
-</p>
-
-```{r message=FALSE}
-#Visual 6: Temperature anamoly
-
-# adding right and left hand sided labels
-climate_change <- climate_change %>%
-  mutate(label_rt = if_else(Month == 12 & Year%%2 == 0, 
-                            as.character(Year), NA_character_)) %>%
-  mutate(label_lt = if_else(Month == 1 & Year%%2 != 0, 
-                            as.character(Year), NA_character_))
-
-
-ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) + 
-  geom_density_ridges_gradient(aes(fill = ..x..), 
-                               scale = 3, size = 0.3, alpha = 0.) +
-  geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted") +
-  scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
-                       name = "Temp") +
-  labs(title = 'Temperature density',
-       subtitle = "Temperature is difference in degrees Celsius between the \n average global temperature in that period and a reference value") + 
-  theme(legend.position = c(0.9,0.2)) +
-  xlab("Temperature") + 
-  ylab("Year") + 
-  theme_classic()
 ```
 
 <p align='justify'>
