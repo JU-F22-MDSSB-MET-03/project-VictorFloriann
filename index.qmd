@@ -16,8 +16,16 @@ bibliography: references.bib
 #| message: false
 
 # These are the packages used in the report
+# Import required package
 library(tidyverse)
-library(readr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library("RColorBrewer")
+library(skimr)
+library("zoo")
+library(plotly) #world map
+library(ggridges)
 ```
 
 This slide deck presents the main insights:
@@ -55,27 +63,399 @@ The Key metrics which contributes to the global climate change is maintained by 
 Data source will be accessed by from Github API with *R* language. There are 3 datasets which will be used for this study, namely
 <br>
 1. Emission levels data<br>
-	  Link : *<https://github.com/owid/co2-data>* <br>
+	  --Link : *<https://github.com/owid/co2-data>* <br>
+	  Link : Kaggle
+	  Link : *<>*
 2. Natural disaster data<br>
 	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
-3. Global temperature anomaly data<br>
-	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
+3. Global temperature data<br>
+    Link : *<https://data.giss.nasa.gov/gistemp/ https://data.giss.nasa.gov/gistemp/tabledata_v4/T_AIRS/GLB.Ts+dSST.csv>*
+4. Children’s Climate and Environment Risk Index<br>
+    Link : *<https://sdmx.data.unicef.org/webservice/data.html>*
 
 Code to extract data:
 ```{r}
 #Code to extract data:
-#co2_data <- read_csv('https://nyc3.digitaloceanspaces.com/owid-public/data/co2/owid-co2-data.csv')
-#head(co2_data)
+climate_change <- read.csv(file = "data/climate_change.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+cceri_data <- read.csv(file = "data/CC_ERI.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+```
+
+Statistical analysis
+```{r}
+#Statistical description
+dim(climate_change)
+dim(cceri_data)
+dim(natural_disaster_data)
+```
+
+```{r}
+##Summary statistics with SKIM function
+#skim(climate_change)
+#skim(cceri_data)
+#skim(natural_disaster_data)
+```
+
+```{r}
+##Checking NA values in the dataset
+apply(is.na(climate_change),2, sum)
+apply(is.na(cceri_data),2, sum)
+apply(is.na(natural_disaster_data),2, sum)
 ```
 
 ## Main visualization of the data 
 
-### Global greenhouse gas emissions as per each sectors
+### Global surface temperature
 
-[![Global greenhouse gas emissions](https://ourworldindata.org/uploads/2020/09/Emissions-by-sector-–-pie-charts.png)](https://ourworldindata.org/ghg-emissions-by-sector)
+```{r message=FALSE}
+#### Visual 1: adding Year-Month variable as year_date
+climate_change$year_date <- as.yearmon(paste(climate_change$Year, climate_change$Month), "%Y %m")
+
+# plotting Temperature-Year 
+ggplot(climate_change, aes(year_date, Temp)) + 
+  geom_line(color = "orange", lwd = .8) + 
+  geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
+  labs(title = "Rise in Temperature",
+       subtitle = "Monthly rise in temperatures from 1985 to 2010",
+       x = "Year", 
+       y = "Temperature") +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold",
+                                  margin = margin(10, 0, 10, 0),
+                                  size = 14)) +
+  theme(panel.grid.minor = element_blank())
+```
 
 <p align='justify'>
-Globally, we emit around 50 billion tonnes of greenhouse gases each year. To prevent severe climate change we need to rapidly reduce global greenhouse gas emissions. Analyzing the this, we could effectively reduce emissions to prevent climate change.
+Observation : 
+
+</p>
+
+### Natural disaster - affected/death and injured
+
+```{r message=FALSE}
+##Pre-processing
+#Selecting only required columns from Natural disaster data for further analysis and visualization
+disaster_data <- natural_disaster_data %>% 
+                  select(Entity,Year, 
+                  affected_all_disasters,affected_temperature,affected_flood,affected_wildfire,
+                  deaths_all_disasters, deaths_temperature, deaths_flood, deaths_wildfire,
+                  injured_all_disasters, injured_temperature, injured_flood, injured_wildfire
+                  ) %>%
+                  group_by(Entity) %>% filter(Year == max(Year)) %>% # Take the most recent date per country
+                  group_by() %>% #removing groupby
+                  drop_na() 
+
+#Selecting only continents from the dataset:
+# Asia, Africa, North America, South America, Antarctica, Europe, and Australia.
+
+continent_data <- filter(disaster_data, 
+                         Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica",
+                                     "Europe", "Australia"))
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Barplot - affected_all_disasters
+ggplot(continent_data, aes(x=Entity, y=affected_all_disasters, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Barplot - deaths_all_disasters
+ggplot(continent_data, aes(x=Entity, y=deaths_all_disasters, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Barplot - injured_all_disasters
+ggplot(continent_data, aes(x=Entity, y=injured_all_disasters, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+# Affected all disaster
+disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
+                                                              "Upper middle income", 
+                                                              "Lower middle income",
+                                                              "Low income",
+                                                              "Asia", 
+                                                              "Africa", 
+                                                              "North America", 
+                                                              "South America", 
+                                                              "Antarctica",
+                                                              "Europe", 
+                                                              "Australia"))) %>% 
+                          group_by(Entity) %>%
+                          filter(Year == max(Year)) %>% # Take the most recent date per country
+                          group_by() %>% #removing groupby
+                          drop_na() 
+
+# Checking the top 5 countries having affected_all_disasters due to disaster:
+sorted = sort(disaster_data_country$affected_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
+as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
+length(unique(top5_data$Entity)) # Make sure the unique length is 20
+#Barplot
+ggplot(top5_data, aes(x=Entity, y=affected_all_disasters, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#deaths_all_disasters
+# Checking the top 5 countries having deaths_all_disasters due to disaster:
+sorted = sort(disaster_data_country$deaths_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
+as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
+length(unique(top5_data$Entity)) # Make sure the unique length is 20
+#Barplot
+ggplot(top5_data, aes(x=Entity, y=deaths_all_disasters, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+# Checking the top 5 countries having injured_temperature due to disaster:
+sorted = sort(disaster_data_country$injured_temperature,decreasing = TRUE,index.return=TRUE)$ix
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
+as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
+length(unique(top5_data$Entity)) # Make sure the unique length is 20
+#Barplot
+ggplot(top5_data, aes(x=Entity, y=injured_temperature, fill=Entity)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+## CC_ERI data exploration:
+
+```{r message=FALSE}
+##Pre-processing
+#Selecting only required columns from CC_ERI data for further analysis and visualization
+cceri_data <- cceri_data %>% 
+              select(REF_AREA,Geographic.area,Indicator,Value) %>%
+              drop_na() 
+
+cceri_data <- cceri_data[!apply(is.na(cceri_data) | cceri_data == "", 1, any),]
+
+cc_eri_data_new <- cceri_data %>%
+        pivot_wider(
+          names_from = "Indicator",
+          values_from = "Value"
+        )
+
+#Checking the number of rows and columns
+dim(cc_eri_data_new)
+
+#Removing space in the column names of the dataset
+names(cc_eri_data_new) <- sub(" ", "_", names(cc_eri_data_new))
+
+summary (cc_eri_data_new)
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Renaming the variables:
+colnames(cc_eri_data_new)[1] <- "ISO_Code"
+colnames(cc_eri_data_new)[4] <- "CCRI"
+colnames(cc_eri_data_new)[6] <- "Child_health_nutrition"
+colnames(cc_eri_data_new)[9] <- "Climate_environmental_shocks"
+colnames(cc_eri_data_new)[21] <- "Soil_water_pollution"
+colnames(cc_eri_data_new)[22] <- " Poverty_Inequality"
+colnames(cc_eri_data_new)[23] <- "Social_protection_conomic_empowerment"
+colnames(cc_eri_data_new)[25] <- "Vector_borne_diseases"
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#World map of country with CCRI:
+l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'robinson')
+)
+fig <- plot_geo(cc_eri_data_new)
+fig <- fig %>% add_trace(
+  z = ~CCRI, color = ~CCRI, colors = 'Reds',
+  text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
+)
+fig <- fig %>% colorbar(title = 'CCRI', tickprefix = '')
+fig <- fig %>% layout(
+  title = 'CCRI- Worldwide',
+  geo = g
+)
+fig
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Visual 5: Heatwave exposure each year 
+
+#World map of country with heatwaves:
+l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'Mercator')
+)
+fig <- plot_geo(cc_eri_data_new)
+fig <- fig %>% add_trace(
+  z = ~Heatwaves, color = ~Heatwaves, colors = 'Reds',
+  text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
+)
+fig <- fig %>% colorbar(title = 'Heatwaves', tickprefix = '')
+fig <- fig %>% layout(
+  title = 'Heatwaves - Worldwide',
+  geo = g
+)
+fig
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Countries with high heatwave exposure
+# Add a geom_segment() layer
+cc_eri_data_new_high <- cc_eri_data_new  %>% top_n(10)
+
+ggplot(data = cc_eri_data_new_high, aes(x = Geographic.area, y = Heatwaves)) + 
+  geom_bar(stat = 'identity', fill = 'darkred') +
+  coord_flip()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Visual 6: Temperature anamoly
+
+# adding right and left hand sided labels
+climate_change <- climate_change %>%
+  mutate(label_rt = if_else(Month == 12 & Year%%2 == 0, 
+                            as.character(Year), NA_character_)) %>%
+  mutate(label_lt = if_else(Month == 1 & Year%%2 != 0, 
+                            as.character(Year), NA_character_))
+
+
+ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) + 
+  geom_density_ridges_gradient(aes(fill = ..x..), 
+                               scale = 3, size = 0.3, alpha = 0.) +
+  geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted") +
+  scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
+                       name = "Temp") +
+  labs(title = 'Temperature density',
+       subtitle = "Temperature is difference in degrees Celsius between the \n average global temperature in that period and a reference value") + 
+  theme(legend.position = c(0.9,0.2)) +
+  xlab("Temperature") + 
+  ylab("Year") + 
+  theme_classic()
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+#Visual 7: Water scarcity
+#Visual 8: Season variablity 
+#Visual 9: Drought frequency
+#Visual 10: Ground water decline
+cceri_data_facet <- filter(cceri_data, 
+                           REF_AREA %in% c("CAF",
+                                           "NGA",
+                                           "TCD",
+                                           "GIN",
+                                           "GNB",
+                                           "SOM",
+                                           "NER",
+                                           "SSD",
+                                           "COD",
+                                           "AGO"))
+
+p1 <- ggplot( cceri_data_facet, aes( x = REF_AREA, y = Value ) ) + 
+  geom_bar( stat = "identity" ) + 
+  facet_wrap( ~ Indicator ) + 
+  xlab("REF_AREA spent per week") + 
+  geom_text( aes( label = paste0( Value, "%" ), y = Value ),
+             vjust = 1.4, size = 3, color = "white" )
+p1 + theme_bw() + 
+  theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+```
+
+<p align='justify'>
+Observation:
+</p>
+
+```{r message=FALSE}
+
+```
+
+<p align='justify'>
+Observation:
+</p>
+```{r message=FALSE}
+
+```
+
+<p align='justify'>
+Observation:
 </p>
 
 ### Seasonality in global temperature anomaly
@@ -100,26 +480,40 @@ The world is entering unprecedented era as climate change drives unprecedented g
 The data used for this study is extracted from *Our World in Data (OWID)*.
 The data produced by is collected by UN, World Resources Institute , NASA and made available by Our World in Data. 
 </p>
-1. Emission levels <br>
-	  Link : *<https://github.com/owid/co2-data>* <br>
-	  Latest Year : 2019 <br>
-	  Observations : 26009 <br>
+1. Emission levels with temperature <br>
+	  Link : *< https://data.giss.nasa.gov/gistemp/  https://data.giss.nasa.gov/gistemp/tabledata_v4/T_AIRS/GLB.Ts+dSST.csv>* <br>
+	  Latest Year : 2021 <br>
+	  Observations :  <br>
 	  Variables:  40 <br>
 	  Last update: September 6, 2022<br>
+	  Meta data:
+	    - GISS Surface Temperature Analysis (GISTEMP v4)
+	    - estimate of global surface temperature change
+	    - Graphs and tables are updated around the middle of every month using current data files from NOAA GHCN v4(meteorological stations) and ERSST v5 (ocean areas)
+	    - These updated files incorporate reports for the previous month and also late reports and corrections for earlier months.
+      - Comparison with one-dimensional global climate models. 
 	  
 2. Natural disaster <br>
-	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)>* <br>
-	  Latest Year : 2019 <br>
-	  Observations: 1605 <br>
-	  Variables: 40 <br>
+	  Link : *<https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Natural%20disasters%20(EMDAT%20–%20decadal)/Natural%20disasters%20(EMDAT%20–%20decadal).csv>* <br>
+	  Latest Year : 2010 <br>
+	  Observations: 1604 <br>
+	  Variables: 164 <br>
 	  Last update: 2021 <br>
-	  
-3. Global temperature anomaly <br>
-	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
-	  Observations: 1605 <br>
-	  Variables: 5 <br>
-	  Last update: 2019 <br>
+	  Meta data:
+	    - This data has been aggregated by Our World in Data by country and year based on the raw database of disasters published by EM-DAT, CRED / UCLouvain, Brussels, Belgium – www.emdat.be
+	    - EM-DAT publishes comprehensive, global data on each individual disaster event – estimating the number of deaths; people affected; and economic damages, from UN reports; government records; expert opinion; and additional sources.
+	    - Our World in Data have calculated annual aggregates, and decadal averages, for each country based on this raw event-by-event dataset.
+Decadal figures are measured as the annual average over the subsequent ten-year period. This means figures for ‘1900’ represent the average from 1900 to 1909; ‘1910’ is the average from 1910 to 1919 etc.
 
+3. Children’s Climate and Environment Risk Index (CCRI) <br>
+    Metadata:
+	  Link : *<https://github.com/owid/owid-datasets/tree/master/datasets/Global%20temperature%20anomaly%20-%20Met%20Office%20(HadCRUT4)>* <br>
+	  Observations: 4075 <br>
+	  Variables: 4 <br>
+	  Last update: 2022 <br>
+	  CCRI depends on two components:
+    - Pillar 1 measures exposure to climate and environmental shocks and stresses. 
+    - Pillar 2 captures child vulnerability. 
 The data is updated regularly and most metrics are published on an annual basis.
 
 ## References {.unnumbered .appendix}
