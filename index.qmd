@@ -26,10 +26,7 @@ library(skimr)
 library("zoo")
 library(plotly) #world map
 library(ggridges)
-#suppressWarnings
-#suppressMessages
 options(warn=-1)
-#options(error = expression(NULL))
 ```
 
 This slide deck presents the main insights:
@@ -309,7 +306,7 @@ Observation:
 #Selecting only required columns from CC_ERI data for further analysis and visualization
 cceri_data <- cceri_data %>% 
               select(REF_AREA,Geographic.area,Indicator,Value) %>%
-              drop_na() 
+              drop_na()
 
 cceri_data <- cceri_data[!apply(is.na(cceri_data) | cceri_data == "", 1, any),]
 
@@ -349,6 +346,8 @@ Observation:
 </p>
 
 ```{r message=FALSE}
+cc_eri_data_new$CCRI <- as.numeric(as.character(cc_eri_data_new$CCRI))
+
 #World map of country with CCRI:
 l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
 # specify map projection/options
@@ -376,7 +375,7 @@ Observation:
 
 ```{r message=FALSE}
 #Visual 5: Heatwave exposure each year 
-
+cc_eri_data_new$Heatwaves <- as.numeric(as.character(cc_eri_data_new$Heatwaves))
 #World map of country with heatwaves:
 l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
 # specify map projection/options
@@ -387,7 +386,7 @@ g <- list(
 )
 fig <- plot_geo(cc_eri_data_new)
 fig <- fig %>% add_trace(
-  z = ~Heatwaves, color = ~Heatwaves, colors = 'Reds',
+  z = ~Heatwaves, color = ~Heatwaves, colors = 'Purples',
   text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
 )
 fig <- fig %>% colorbar(title = 'Heatwaves', tickprefix = '')
