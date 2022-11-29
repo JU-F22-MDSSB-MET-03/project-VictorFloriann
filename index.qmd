@@ -120,10 +120,11 @@ climate_change$year_date <- as.yearmon(paste(climate_change$Year, climate_change
 ggplot(climate_change, aes(year_date, Temp)) + 
   geom_line(color = "orange", lwd = .8) + 
   geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
-  labs(title = "Rise in Temperature",
-       subtitle = "Monthly rise in temperatures from 1985 to 2022",
+  labs(title = "A world of agreement - Temperature is rising",
+       subtitle = "Global temperature anamaly (relative to 1985-2022, °C)",
        x = "Year", 
-       y = "Temperature") +
+       y = "Temperature",
+       caption = "Source document from NASA: https://earthobservatory.nasa.gov/world-of-change/global-temperatures",) +
   theme_minimal() +
   theme(plot.title = element_text(face = "bold",
                                   margin = margin(10, 0, 10, 0),
@@ -132,8 +133,7 @@ ggplot(climate_change, aes(year_date, Temp)) +
 ```
 
 <p align='justify'>
-Observation : 
-
+Air temperatures on Earth have been rising since the Industrial Revolution. According to an ongoing temperature analysis led by scientists at NASA’s Goddard Institute for Space Studies (GISS), the average global temperature on Earth has increased by at least 1.1° Celsius (1.9° Fahrenheit) since 1880. A one-degree global change is significant because it takes a vast amount of heat to warm all of the oceans, the atmosphere, and the land masses by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age. A five-degree drop was enough to bury a large part of North America under a towering mass of ice 20,000 years ago.
 </p>
 
 ### Temperature density
@@ -155,9 +155,10 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
   geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted") +
   scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
                        name = "Temp") +
-  labs(title = 'Temperature density',
-       subtitle = "Temperature Difference in degrees Celsius from the year 1983 to 2022") + 
-  theme(legend.position = c(0.9,0.2)) +
+  labs(title = 'Shifting Distribution of Land Temperature Anomalies',
+       subtitle = "Temperature Difference in degrees Celsius from the year 1983 to 2022",
+       caption = "Source document from NASA: https://svs.gsfc.nasa.gov/4891",) + 
+  theme(legend.position = c(0.8,0.2)) +
   xlab("Temperature") + 
   ylab("Year") + 
   theme_classic()
@@ -165,7 +166,7 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
 ```
 
 <p align='justify'>
-Observation:
+This visualization shows how the distribution of land temperature anomalies has varied over time. As the planet has warmed, we see the peak of the distribution shifting to the right. The distribution of temperatures broadens as well. This broadening is most likely due to differential regional warming rather than increased temperature variability at any given location.
 </p>
 
 ### Natural disaster - affected/death and injured
@@ -192,7 +193,7 @@ continent_data <- filter(disaster_data,
 ```
 
 <p align='justify'>
-Observation:
+Observation: 
 </p>
 
 #### Natural disaster - Affected due to all disaster
@@ -203,7 +204,7 @@ Observation:
 
 ## Add a column indicating whether the category should be highlighted
 X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "Asia", "yes", "no" ) )
-X$affected_all_disasters <- log10(X$affected_all_disasters) 
+#X$affected_all_disasters <- log10(X$affected_all_disasters) 
 
 #ggplot( X, aes(x = reorder(Entity, +affected_all_disasters), y=affected_all_disasters,fill = ToHighlight)) +
 ggplot( X, aes(x = Entity, y=affected_all_disasters,fill = ToHighlight)) +
@@ -211,6 +212,7 @@ ggplot( X, aes(x = Entity, y=affected_all_disasters,fill = ToHighlight)) +
       coord_flip() +
       xlab("Continents") +
       ylab("People affected by all disasters") +
+      labs(title = 'People affected by all disasters - All continents',) +
       scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
@@ -230,6 +232,7 @@ ggplot( X, aes(x = Entity, y=deaths_all_disasters,fill = ToHighlight)) +
       coord_flip() +
       xlab("Continents") +
       ylab("People death by all disasters") +
+      labs(title = 'People died by all disasters - All continents',) +
       scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
@@ -245,6 +248,7 @@ ggplot( X, aes(x = Entity, y=injured_all_disasters,fill = ToHighlight)) +
       coord_flip() +
       xlab("Continents") +
       ylab("People injured by all disasters") +
+      labs(title = 'People injured by all disasters - All continents',) +
       scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
@@ -290,7 +294,8 @@ ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_tem
   geom_bar(stat = "identity") + 
   xlab("Country") +
   ylab("People affected by temperature") +
-  coord_flip()
+  labs(title = 'People affected by temperature - Country',)
+  #coord_flip()
 ```
 
 <p align='justify'>
@@ -318,7 +323,8 @@ ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, 
   geom_bar(stat = "identity") + 
   xlab("Country") +
   ylab("People death by wildfire") +
-  coord_flip()
+  labs(title = 'People affected by widfire - Country',)
+  #coord_flip()
 
 ```
 
@@ -347,7 +353,8 @@ ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood, fill
   geom_bar(stat = "identity") + 
   xlab("Country") +
   ylab("People injured by flood") +
-  coord_flip()
+  labs(title = 'People affected by flood - Country',)
+  #coord_flip()
 ```
 
 <p align='justify'>
@@ -435,7 +442,7 @@ Observation:
 ```{r message=FALSE}
 
 cc_eri_data_new$Child_health <- as.numeric(as.character(cc_eri_data_new$Child_health))
-cc_eri_data_new <- cc_eri_data_new %>% drop_na() #removing na values in the dataset
+#cc_eri_data_new <- cc_eri_data_new %>% drop_na() #removing na values in the dataset
 #World map of country with heatwaves:
 l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
 # specify map projection/options
@@ -565,7 +572,7 @@ p1 <- ggplot( cceri_data_facet, aes( x = REF_AREA, y = Value ) ) +
   geom_bar( stat = "identity" ) + 
   facet_wrap( ~ Indicator) + 
   xlab("Country code") + 
-  ylab("Indicator") + 
+  ylab("Indicator")  +
   geom_text( aes( label = paste0( Value, "%" ), y = Value ),
              vjust = 1.4, size = 2, color = "white" )
 
@@ -578,13 +585,6 @@ p1 + theme_bw() +
 Observation:
 </p>
 
-```{r message=FALSE}
-
-```
-
-<p align='justify'>
-Observation:
-</p>
 ```{r message=FALSE}
 
 ```
