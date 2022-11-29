@@ -26,7 +26,11 @@ library(skimr)
 library("zoo")
 library(plotly) #world map
 library(ggridges)
+library(forcats)
 options(warn=-1)
+#library(corrplot)
+library(reshape2)
+library(gganimate)
 ```
 
 This slide deck presents the main insights:
@@ -132,8 +136,10 @@ Observation :
 
 </p>
 
+### Temperature density
+
 ```{r message=FALSE}
-#Visual 6: Temperature anamoly
+#Visual 6: Temperature density
 
 # adding right and left hand sided labels
 climate_change <- climate_change %>%
@@ -150,11 +156,12 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
   scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
                        name = "Temp") +
   labs(title = 'Temperature density',
-       subtitle = "Temperature is difference in degrees Celsius between the \n average global temperature in that period and a reference value") + 
+       subtitle = "Temperature Difference in degrees Celsius from the year 1983 to 2022") + 
   theme(legend.position = c(0.9,0.2)) +
   xlab("Temperature") + 
   ylab("Year") + 
   theme_classic()
+
 ```
 
 <p align='justify'>
@@ -188,38 +195,64 @@ continent_data <- filter(disaster_data,
 Observation:
 </p>
 
+#### Natural disaster - Affected due to all disaster
+
 ```{r message=FALSE}
+
 #Barplot - affected_all_disasters
-ggplot(continent_data, aes(x=Entity, y=affected_all_disasters, fill=Entity)) + 
-  geom_bar(stat = "identity") + 
-  coord_flip()
+
+## Add a column indicating whether the category should be highlighted
+X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "Asia", "yes", "no" ) )
+X$affected_all_disasters <- log10(X$affected_all_disasters) 
+
+#ggplot( X, aes(x = reorder(Entity, +affected_all_disasters), y=affected_all_disasters,fill = ToHighlight)) +
+ggplot( X, aes(x = Entity, y=affected_all_disasters,fill = ToHighlight)) +
+      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
+      coord_flip() +
+      xlab("Continents") +
+      ylab("People affected by all disasters") +
+      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
 <p align='justify'>
 Observation:
 </p>
+
+#### Natural disaster - death due to all disaster
 
 ```{r message=FALSE}
-#Barplot - deaths_all_disasters
-ggplot(continent_data, aes(x=Entity, y=deaths_all_disasters, fill=Entity)) + 
-  geom_bar(stat = "identity") + 
-  coord_flip()
+## Add a column indicating whether the category should be highlighted
+X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "North America", "yes", "no" ) )
+X$deaths_all_disasters <- log10(X$deaths_all_disasters) 
+
+ggplot( X, aes(x = Entity, y=deaths_all_disasters,fill = ToHighlight)) +
+      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
+      coord_flip() +
+      xlab("Continents") +
+      ylab("People death by all disasters") +
+      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
-<p align='justify'>
-Observation:
-</p>
+#### Natural disaster - Injured due to all disaster
 
 ```{r message=FALSE}
-#Barplot - injured_all_disasters
-ggplot(continent_data, aes(x=Entity, y=injured_all_disasters, fill=Entity)) + 
-  geom_bar(stat = "identity") + 
-  coord_flip()
+## Add a column indicating whether the category should be highlighted
+X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "Asia", "yes", "no" ) )
+X$injured_all_disasters <- log10(X$injured_all_disasters) 
+
+ggplot( X, aes(x = Entity, y=injured_all_disasters,fill = ToHighlight)) +
+      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
+      coord_flip() +
+      xlab("Continents") +
+      ylab("People injured by all disasters") +
+      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
 
 <p align='justify'>
 Observation:
 </p>
+
+### Country analysis - affected_flood
 
 ```{r message=FALSE}
 # Affected all disaster
@@ -227,6 +260,7 @@ disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
                                                               "Upper middle income", 
                                                               "Lower middle income",
                                                               "Low income",
+                                                              "High income",
                                                               "Asia", 
                                                               "Africa", 
                                                               "North America", 
@@ -239,59 +273,80 @@ disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
                           group_by() %>% #removing groupby
                           drop_na() 
 
-# Checking the top 5 countries having affected_all_disasters due to disaster:
-sorted = sort(disaster_data_country$affected_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+# Checking the top 5 countries having affected_temperature due to disaster:
+sorted = sort(disaster_data_country$affected_temperature,decreasing = TRUE,index.return=TRUE)$ix
+
 #Subseting Top20 countries by April 25th
-top5 <- disaster_data[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
-as.character(top5$Entity) # make the country names as character
+top5 <- disaster_data_country[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
-length(unique(top5_data$Entity)) # Make sure the unique length is 20
+top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
 #Barplot
-ggplot(top5_data, aes(x=Entity, y=affected_all_disasters, fill=Entity)) + 
+#top5_data$affected_temperature <- log10 (top5_data$affected_temperature)
+ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=Entity)) + 
   geom_bar(stat = "identity") + 
+  xlab("Country") +
+  ylab("People affected by temperature") +
   coord_flip()
 ```
 
 <p align='justify'>
 Observation:
 </p>
+
+### Country analysis - deaths_wildfire
 
 ```{r message=FALSE}
 #deaths_all_disasters
-# Checking the top 5 countries having deaths_all_disasters due to disaster:
-sorted = sort(disaster_data_country$deaths_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+# Checking the top 5 countries having affected_temperature due to disaster:
+sorted = sort(disaster_data_country$deaths_wildfire,decreasing = TRUE,index.return=TRUE)$ix
+
 #Subseting Top20 countries by April 25th
-top5 <- disaster_data[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
-as.character(top5$Entity) # make the country names as character
+top5 <- disaster_data_country[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
-length(unique(top5_data$Entity)) # Make sure the unique length is 20
+top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
 #Barplot
-ggplot(top5_data, aes(x=Entity, y=deaths_all_disasters, fill=Entity)) + 
+#top5_data$deaths_wildfire <- log10 (top5_data$deaths_wildfire)
+ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=Entity)) + 
   geom_bar(stat = "identity") + 
+  xlab("Country") +
+  ylab("People death by wildfire") +
   coord_flip()
+
 ```
 
 <p align='justify'>
 Observation:
 </p>
+
+### Country analysis - injured_flood
 
 ```{r message=FALSE}
-# Checking the top 5 countries having injured_temperature due to disaster:
-sorted = sort(disaster_data_country$injured_temperature,decreasing = TRUE,index.return=TRUE)$ix
+#deaths_all_disasters
+# Checking the top 5 countries having affected_temperature due to disaster:
+sorted = sort(disaster_data_country$injured_flood,decreasing = TRUE,index.return=TRUE)$ix
+
 #Subseting Top20 countries by April 25th
-top5 <- disaster_data[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data$Entity[sorted[1:5]]) # construct a dataframe based on the top 20 countries
-as.character(top5$Entity) # make the country names as character
+top5 <- disaster_data_country[sorted[1:5],]
+top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data,top5,by="Entity") #join two tables together 
-length(unique(top5_data$Entity)) # Make sure the unique length is 20
+top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
 #Barplot
-ggplot(top5_data, aes(x=Entity, y=injured_temperature, fill=Entity)) + 
+#top5_data$injured_flood <- log10 (top5_data$injured_flood)
+ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood, fill=Entity)) + 
   geom_bar(stat = "identity") + 
+  xlab("Country") +
+  ylab("People injured by flood") +
   coord_flip()
 ```
 
@@ -299,7 +354,7 @@ ggplot(top5_data, aes(x=Entity, y=injured_temperature, fill=Entity)) +
 Observation:
 </p>
 
-## CC_ERI data exploration:
+### Children climate Risk and Environment analysis
 
 ```{r message=FALSE}
 ##Pre-processing
@@ -311,18 +366,18 @@ cceri_data <- cceri_data %>%
 cceri_data <- cceri_data[!apply(is.na(cceri_data) | cceri_data == "", 1, any),]
 
 cc_eri_data_new <- cceri_data %>%
-        pivot_wider(
-          names_from = "Indicator",
-          values_from = "Value"
-        )
+                  pivot_wider(names_from = "Indicator",
+                              values_from = "Value"
+                              ) %>% 
+                  drop_na() 
 
 #Checking the number of rows and columns
-dim(cc_eri_data_new)
+#dim(cc_eri_data_new)
 
 #Removing space in the column names of the dataset
 names(cc_eri_data_new) <- sub(" ", "_", names(cc_eri_data_new))
 
-summary (cc_eri_data_new)
+#summary (cc_eri_data_new)
 ```
 
 <p align='justify'>
@@ -345,6 +400,8 @@ colnames(cc_eri_data_new)[25] <- "Vector_borne_diseases"
 Observation:
 </p>
 
+### Children Climate Risk Index (CCRI) - Worldwide
+
 ```{r message=FALSE}
 cc_eri_data_new$CCRI <- as.numeric(as.character(cc_eri_data_new$CCRI))
 
@@ -363,7 +420,7 @@ fig <- fig %>% add_trace(
 )
 fig <- fig %>% colorbar(title = 'CCRI', tickprefix = '')
 fig <- fig %>% layout(
-  title = 'CCRI- Worldwide',
+  title = 'Children Climate Risk Index (CCRI) - Worldwide',
   geo = g
 )
 fig
@@ -373,9 +430,12 @@ fig
 Observation:
 </p>
 
+### Children health- Worldwide
+
 ```{r message=FALSE}
-#Visual 5: Heatwave exposure each year 
-cc_eri_data_new$Heatwaves <- as.numeric(as.character(cc_eri_data_new$Heatwaves))
+
+cc_eri_data_new$Child_health <- as.numeric(as.character(cc_eri_data_new$Child_health))
+cc_eri_data_new <- cc_eri_data_new %>% drop_na() #removing na values in the dataset
 #World map of country with heatwaves:
 l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
 # specify map projection/options
@@ -386,12 +446,12 @@ g <- list(
 )
 fig <- plot_geo(cc_eri_data_new)
 fig <- fig %>% add_trace(
-  z = ~Heatwaves, color = ~Heatwaves, colors = 'Purples',
+  z = ~Child_health, color = ~Child_health, colors = 'Purples',
   text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
 )
-fig <- fig %>% colorbar(title = 'Heatwaves', tickprefix = '')
+fig <- fig %>% colorbar(title = 'Child Health', tickprefix = '')
 fig <- fig %>% layout(
-  title = 'Heatwaves - Worldwide',
+  title = 'Child Health - Worldwide',
   geo = g
 )
 fig
@@ -402,44 +462,116 @@ Observation:
 </p>
 
 ```{r message=FALSE}
-#Countries with high heatwave exposure
-# Add a geom_segment() layer
-cc_eri_data_new_high <- cc_eri_data_new  %>% top_n(10)
 
-ggplot(data = cc_eri_data_new_high, aes(x = Geographic.area, y = Heatwaves)) + 
-  geom_bar(stat = 'identity', fill = 'darkred') +
-  coord_flip()
+cc_eri_data_new$Child_vulnerability <- as.numeric(as.character(cc_eri_data_new$Child_vulnerability))
+cc_eri_data_new <- cc_eri_data_new %>% drop_na() #removing na values in the dataset
+#World map of country with heatwaves:
+l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'Mercator')
+)
+fig <- plot_geo(cc_eri_data_new)
+fig <- fig %>% add_trace(
+  z = ~Child_vulnerability, color = ~Child_vulnerability, colors = 'Blues',
+  text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
+)
+fig <- fig %>% colorbar(title = 'Child Vulnerability', tickprefix = '')
+fig <- fig %>% layout(
+  title = 'Child Vulnerability - Worldwide',
+  geo = g
+)
+fig
+```
+
+```{r message=FALSE}
+#Visual 5: Heatwave exposure each year 
+cc_eri_data_new$Child_health_nutrition <- as.numeric(as.character(cc_eri_data_new$Child_health_nutrition))
+cc_eri_data_new <- cc_eri_data_new %>% drop_na() #removing na values in the dataset
+#World map of country with heatwaves:
+l <- list(color = toRGB("black"), width = 0.5) # light black boundaries
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'Mercator')
+)
+fig <- plot_geo(cc_eri_data_new)
+fig <- fig %>% add_trace(
+  z = ~Child_health_nutrition, color = ~Child_health_nutrition, colors = 'viridis',
+  text = ~Geographic.area, locations = ~ISO_Code, marker = list(line = l)
+)
+fig <- fig %>% colorbar(title = 'Child health nutrition', tickprefix = '')
+fig <- fig %>% layout(
+  title = 'Child health nutrition - Worldwide',
+  geo = g
+)
+fig
+```
+
+#### Correlation map
+```{r message=FALSE}
+# Correlation map
+cc_eri_data_new$Child_nutrition <- as.numeric(as.character(cc_eri_data_new$Child_nutrition))
+cc_eri_data_new$Climate_environmental_shocks <- as.numeric(as.character(cc_eri_data_new$Climate_environmental_shocks))
+cc_eri_data_new$Education <- as.numeric(as.character(cc_eri_data_new$Education))
+cc_eri_data_new$Coastal_floods <- as.numeric(as.character(cc_eri_data_new$Coastal_floods))
+cc_eri_data_new$Heatwaves <- as.numeric(as.character(cc_eri_data_new$Heatwaves))
+cc_eri_data_new$Soil_water_pollution <- as.numeric(as.character(cc_eri_data_new$Soil_water_pollution))
+cc_eri_data_new$Vector_borne_diseases <- as.numeric(as.character(cc_eri_data_new$Vector_borne_diseases))
+cc_eri_data_new$Water_scarcity <- as.numeric(as.character(cc_eri_data_new$Water_scarcity))
+
+cc_eri_corr <- cc_eri_data_new %>% drop_na() 
+data <- cor(cc_eri_corr[sapply(cc_eri_corr,is.numeric)])
+data1 <- melt(data)
+ggplot(data1, aes(x = Var1,
+                  y = Var2,
+                  fill = value))+
+        geom_tile() +
+        theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+#corrplot(cor(data),
+  #method = "number",
+  #type = "upper", # show only upper side
+  #)
+
+#heatmap(data) 
+
 ```
 
 <p align='justify'>
 Observation:
 </p>
 
-```{r message=FALSE}
-#Visual 7: Water scarcity
-#Visual 8: Season variablity 
-#Visual 9: Drought frequency
-#Visual 10: Ground water decline
+```{r dpi = 300}
+#Visualization 7,8,9, 19: 
+#Selecting top 10 countries having high CCRI
 cceri_data_facet <- filter(cceri_data, 
-                           REF_AREA %in% c("CAF",
-                                           "NGA",
-                                           "TCD",
-                                           "GIN",
-                                           "GNB",
-                                           "SOM",
-                                           "NER",
-                                           "SSD",
-                                           "COD",
-                                           "AGO"))
+                           REF_AREA %in% c("CAF","COD","BGD","CIV","PHL","UGA","IDN","THA","MYS","SLV"))
+
+cceri_data_facet <- filter(cceri_data_facet, 
+                           Indicator %in% c(#"Communication assets",
+                                            "Education",
+                                            "Coastal floods",
+                                            "Maternal health",
+                                            "Air pollution",
+                                            "Pesticide pollution",
+                                            "Soil and water pollution",
+                                            "Poverty and Inequality",
+                                            "Vector borne diseases","Water scarcity"))
 
 p1 <- ggplot( cceri_data_facet, aes( x = REF_AREA, y = Value ) ) + 
   geom_bar( stat = "identity" ) + 
-  facet_wrap( ~ Indicator ) + 
-  xlab("REF_AREA spent per week") + 
+  facet_wrap( ~ Indicator) + 
+  xlab("Country code") + 
+  ylab("Indicator") + 
   geom_text( aes( label = paste0( Value, "%" ), y = Value ),
-             vjust = 1.4, size = 3, color = "white" )
+             vjust = 1.4, size = 2, color = "white" )
+
 p1 + theme_bw() + 
   theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+
 ```
 
 <p align='justify'>
