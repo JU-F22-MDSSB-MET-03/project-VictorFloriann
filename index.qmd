@@ -31,6 +31,9 @@ options(warn=-1)
 #library(corrplot)
 library(reshape2)
 library(gganimate)
+library("gridExtra")
+library("ggpubr")
+#install.packages("ggpubr")
 ```
 
 This slide deck presents the main insights:
@@ -84,6 +87,7 @@ Code to extract data:
 climate_change <- read.csv(file = "data/climate_change.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 cceri_data <- read.csv(file = "data/CC_ERI.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+continent <- read.csv(file = "data/Continents.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 ```
 
 Statistical analysis
@@ -118,18 +122,26 @@ climate_change$year_date <- as.yearmon(paste(climate_change$Year, climate_change
 
 # plotting Temperature-Year 
 ggplot(climate_change, aes(year_date, Temp)) + 
-  geom_line(color = "orange", lwd = .8) + 
-  geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
-  labs(title = "A world of agreement - Temperature is rising",
-       subtitle = "Global temperature anamaly (relative to 1985-2022, °C)",
-       x = "Year", 
-       y = "Temperature",
-       caption = "Source document from NASA: https://earthobservatory.nasa.gov/world-of-change/global-temperatures",) +
+  #geom_line(color = "orange", lwd = .8) 
+  geom_line(aes(color = "actual temperature")) +
+  #geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
+  geom_smooth(aes(se=FALSE, color = "Avg temp")) +
+  labs(title = "World has agreed - Temperature is rising",
+       subtitle = "Global temperature rise from 1985 to 2022 (°C)",
+       #x = "Year", 
+       y = "Global Earth Temperature",
+       color = "Legend",
+       caption = "NASA: https://earthobservatory.nasa.gov/world-of-change/global-temperatures",) +
+  scale_colour_manual(values = c("orange", "blue"),
+                      #values = c("#5C1AAE", "#AE5C1A"),
+                      labels = c("Actual temperature", "Average temperature")) +
   theme_minimal() +
+  scale_y_continuous(limits = c(-.5,1.5)) +
+  scale_x_continuous(limits = c(1985,2022)) +
   theme(plot.title = element_text(face = "bold",
                                   margin = margin(10, 0, 10, 0),
                                   size = 14)) +
-  theme(panel.grid.minor = element_blank())
+  theme(panel.grid.minor = element_blank()) 
 ```
 
 <p align='justify'>
@@ -138,7 +150,7 @@ Air temperatures on Earth have been rising since the Industrial Revolution. Acco
 
 ### Temperature density
 
-```{r message=FALSE}
+```{r fig.height = 7, message=FALSE}
 #Visual 6: Temperature density
 
 # adding right and left hand sided labels
@@ -151,13 +163,13 @@ climate_change <- climate_change %>%
 
 ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) + 
   geom_density_ridges_gradient(aes(fill = ..x..), 
-                               scale = 3, size = 0.3, alpha = 0.) +
-  geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted") +
+                               scale = 3, size = 0.3, alpha = 0.5) +
+  geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted")+
   scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
                        name = "Temp") +
   labs(title = 'Shifting Distribution of Land Temperature Anomalies',
        subtitle = "Temperature Difference in degrees Celsius from the year 1983 to 2022",
-       caption = "Source document from NASA: https://svs.gsfc.nasa.gov/4891",) + 
+       caption = "NASA: https://svs.gsfc.nasa.gov/4891",) + 
   theme(legend.position = c(0.8,0.2)) +
   xlab("Temperature") + 
   ylab("Year") + 
@@ -199,64 +211,63 @@ Observation:
 #### Natural disaster - Affected due to all disaster
 
 ```{r message=FALSE}
+# No legend, since the information is redundant
+# Add y axis units - TBD
+continent_data$affected_all_disasters <- log10(continent_data$affected_all_disasters) 
 
-#Barplot - affected_all_disasters
+ggplot(data=continent_data, aes(x=Entity, y=affected_all_disasters)) +
+    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
+    coord_flip() +
+    ylab("Number of People affected by climate disasters") +
+    labs(title = 'Increase in people affected in ASIA by disasters caused by climate change',
+         subtitle = "Climate related disaster"
+       ) + 
+    theme_minimal() 
+    #guides(fill=FALSE)
 
-## Add a column indicating whether the category should be highlighted
-X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "Asia", "yes", "no" ) )
-#X$affected_all_disasters <- log10(X$affected_all_disasters) 
-
-#ggplot( X, aes(x = reorder(Entity, +affected_all_disasters), y=affected_all_disasters,fill = ToHighlight)) +
-ggplot( X, aes(x = Entity, y=affected_all_disasters,fill = ToHighlight)) +
-      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
-      coord_flip() +
-      xlab("Continents") +
-      ylab("People affected by all disasters") +
-      labs(title = 'People affected by all disasters - All continents',) +
-      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
 ```
-
-<p align='justify'>
-Observation:
-</p>
 
 #### Natural disaster - death due to all disaster
 
 ```{r message=FALSE}
-## Add a column indicating whether the category should be highlighted
-X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "North America", "yes", "no" ) )
-X$deaths_all_disasters <- log10(X$deaths_all_disasters) 
+# No legend, since the information is redundant
+# Add y axis units - TBD
+continent_data$deaths_all_disasters <- log10(continent_data$deaths_all_disasters) 
 
-ggplot( X, aes(x = Entity, y=deaths_all_disasters,fill = ToHighlight)) +
-      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
-      coord_flip() +
-      xlab("Continents") +
-      ylab("People death by all disasters") +
-      labs(title = 'People died by all disasters - All continents',) +
-      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
+ggplot(data=continent_data, aes(x=Entity, y=deaths_all_disasters)) +
+    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
+    coord_flip() +
+    ylab("Number of People died by climate disasters") +
+    labs(title = 'Increase in people death in ASIA and North America by disasters caused by climate change',
+         subtitle = "Climate related disaster"
+       ) + 
+    theme_minimal() 
 ```
 
 #### Natural disaster - Injured due to all disaster
 
 ```{r message=FALSE}
-## Add a column indicating whether the category should be highlighted
-X <- continent_data %>% mutate( ToHighlight = ifelse( Entity == "Asia", "yes", "no" ) )
-X$injured_all_disasters <- log10(X$injured_all_disasters) 
+# No legend, since the information is redundant
+# Add y axis units - TBD
+continent_data$injured_all_disasters <- log10(continent_data$injured_all_disasters) 
 
-ggplot( X, aes(x = Entity, y=injured_all_disasters,fill = ToHighlight)) +
-      geom_bar(stat="identity",  alpha=.6, width=.6) + #, fill="#bdbdbd",) +
-      coord_flip() +
-      xlab("Continents") +
-      ylab("People injured by all disasters") +
-      labs(title = 'People injured by all disasters - All continents',) +
-      scale_fill_manual( values = c( "yes"="red", "no"="gray" ), guide = FALSE ) 
+ggplot(data=continent_data, aes(x=Entity, y=injured_all_disasters)) +
+    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
+    coord_flip() +
+    ylab("Number of People injured by climate disasters") +
+    labs(title = 'Increase in people injured in ASIA by disasters caused by climate change',
+         subtitle = "Climate related disaster"
+       ) + 
+    theme_minimal() 
 ```
 
-<p align='justify'>
-Observation:
-</p>
-
 ### Country analysis - affected_flood
+
+```{r message=FALSE}
+continent_data_new <- continent %>% 
+              select(name,alpha.3,region,sub.region) %>%
+              drop_na()
+```
 
 ```{r message=FALSE}
 # Affected all disaster
@@ -277,6 +288,15 @@ disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
                           group_by() %>% #removing groupby
                           drop_na() 
 
+#Joining disaster data with continent data:
+colnames(continent_data_new)[1] <- "Entity"
+disaster_data_country <- left_join(disaster_data_country, continent_data_new, by = c('Entity'))
+disaster_data_country <- filter(disaster_data_country, (region %in% c("Asia", "Americas","Africa"))) %>% 
+                        drop_na() 
+head(disaster_data_country,2)
+```
+
+```{r message=FALSE}
 # Checking the top 5 countries having affected_temperature due to disaster:
 sorted = sort(disaster_data_country$affected_temperature,decreasing = TRUE,index.return=TRUE)$ix
 
@@ -289,13 +309,16 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 #length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
-#top5_data$affected_temperature <- log10 (top5_data$affected_temperature)
-ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=Entity)) + 
+top5_data$affected_temperature <- log10 (top5_data$affected_temperature)
+p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  xlab("Country") +
-  ylab("People affected by temperature") +
-  labs(title = 'People affected by temperature - Country',)
-  #coord_flip()
+  #xlab("Country") +
+  #ylab("People affected by temperature") +
+  labs(title = 'People affected by temperature - Country',) +
+  theme_minimal() +
+  coord_flip()
+
+p
 ```
 
 <p align='justify'>
@@ -318,14 +341,15 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 #length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
-#top5_data$deaths_wildfire <- log10 (top5_data$deaths_wildfire)
-ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=Entity)) + 
+top5_data$deaths_wildfire <- log10 (top5_data$deaths_wildfire)
+q <- ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  xlab("Country") +
-  ylab("People death by wildfire") +
-  labs(title = 'People affected by widfire - Country',)
-  #coord_flip()
-
+  #xlab("Country") +
+  #ylab("People death by wildfire") +
+  labs(title = 'People affected by widfire - Country',) +
+  theme_minimal() +
+  coord_flip()
+q 
 ```
 
 <p align='justify'>
@@ -348,15 +372,24 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 #length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
-#top5_data$injured_flood <- log10 (top5_data$injured_flood)
-ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood, fill=Entity)) + 
+top5_data$injured_flood <- log10 (top5_data$injured_flood)
+r <- ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood,fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  xlab("Country") +
-  ylab("People injured by flood") +
-  labs(title = 'People affected by flood - Country',)
-  #coord_flip()
+  #theme(legend.position = "none") +
+  #xlab("Country") +
+  #ylab("People injured by flood") +
+  labs(title = 'People affected by flood - Country',) +
+  theme_minimal() +
+  coord_flip()
+r
 ```
 
+```{r fig.height = 4,fig.width=5, message=FALSE}
+#figure <- ggarrange(p, q, r,
+                    #labels = c("A", "B", "C"),
+                    #ncol = 2, nrow = 2)
+#figure
+```
 <p align='justify'>
 Observation:
 </p>
@@ -531,13 +564,13 @@ cc_eri_data_new$Vector_borne_diseases <- as.numeric(as.character(cc_eri_data_new
 cc_eri_data_new$Water_scarcity <- as.numeric(as.character(cc_eri_data_new$Water_scarcity))
 
 cc_eri_corr <- cc_eri_data_new %>% drop_na() 
-data <- cor(cc_eri_corr[sapply(cc_eri_corr,is.numeric)])
-data1 <- melt(data)
-ggplot(data1, aes(x = Var1,
-                  y = Var2,
-                  fill = value))+
-        geom_tile() +
-        theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+#data <- cor(cc_eri_corr[sapply(cc_eri_corr,is.numeric)])
+#data1 <- melt(data)
+#ggplot(data1, aes(x = Var1,
+ #                 y = Var2,
+#                  fill = value))+
+#        geom_tile() +
+#        theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
 #corrplot(cor(data),
   #method = "number",
   #type = "upper", # show only upper side
@@ -551,7 +584,7 @@ ggplot(data1, aes(x = Var1,
 Observation:
 </p>
 
-```{r dpi = 300}
+```{r fig.height = 7, fig.height = 8, message=FALSE}
 #Visualization 7,8,9, 19: 
 #Selecting top 10 countries having high CCRI
 cceri_data_facet <- filter(cceri_data, 
@@ -568,16 +601,23 @@ cceri_data_facet <- filter(cceri_data_facet,
                                             "Poverty and Inequality",
                                             "Vector borne diseases","Water scarcity"))
 
-p1 <- ggplot( cceri_data_facet, aes( x = REF_AREA, y = Value ) ) + 
+p1 <- ggplot( cceri_data_facet, aes( x = Geographic.area, y = Value ) ) + 
   geom_bar( stat = "identity" ) + 
   facet_wrap( ~ Indicator) + 
   xlab("Country code") + 
   ylab("Indicator")  +
   geom_text( aes( label = paste0( Value, "%" ), y = Value ),
-             vjust = 1.4, size = 2, color = "white" )
+             vjust = 1.4, size = 2, color = "white" )+
+  #theme_minimal() +
+  #scale_x_discrete(limits = c(1,10)) +
+  coord_flip()
 
-p1 + theme_bw() + 
-  theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+p1 + scale_x_discrete(breaks=c("1","2","3","4","5","6","7","8","9","10"),
+                        labels=c("1","2","3","4","5","6","7","8","9","10"))
+
+#p1 + theme_bw() + 
+  #theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+
 
 ```
 
