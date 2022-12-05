@@ -34,6 +34,11 @@ library(gganimate)
 library("gridExtra")
 library("ggpubr")
 #install.packages("ggpubr")
+library(gganimate)
+require(plyr)
+library(rnoaa)
+library(rgdal)
+library(ggthemes)
 ```
 
 This slide deck presents the main insights:
@@ -118,24 +123,20 @@ apply(is.na(cceri_data),2, sum)
 
 ```{r message=FALSE}
 #### Visual 1: adding Year-Month variable as year_date
-climate_change$year_date <- as.yearmon(paste(climate_change$Year, climate_change$Month), "%Y %m")
+climate_change$year <- as.yearmon(paste(climate_change$Year, climate_change$Month), "%Y %m")
 
 # plotting Temperature-Year 
-ggplot(climate_change, aes(year_date, Temp)) + 
-  #geom_line(color = "orange", lwd = .8) 
+ggplot(climate_change, aes(year, Temp)) + 
   geom_line(aes(color = "actual temperature")) +
-  #geom_smooth(se=FALSE, linetype = "dotted",color = "firebrick") + 
   geom_smooth(aes(se=FALSE, color = "Avg temp")) +
-  labs(title = "World has agreed - Temperature is rising",
+  labs(title = "Global Temperature is rising",
        subtitle = "Global temperature rise from 1985 to 2022 (°C)",
-       #x = "Year", 
        y = "Global Earth Temperature",
-       color = "Legend",
-       caption = "NASA: https://earthobservatory.nasa.gov/world-of-change/global-temperatures",) +
+       color = "Temperature",
+       caption = "Annual estimates of mean surface temperature change measured in Degree Celsius for World.",) +
   scale_colour_manual(values = c("orange", "blue"),
-                      #values = c("#5C1AAE", "#AE5C1A"),
                       labels = c("Actual temperature", "Average temperature")) +
-  theme_minimal() +
+  theme_classic() +
   scale_y_continuous(limits = c(-.5,1.5)) +
   scale_x_continuous(limits = c(1985,2022)) +
   theme(plot.title = element_text(face = "bold",
@@ -150,8 +151,8 @@ Air temperatures on Earth have been rising since the Industrial Revolution. Acco
 
 ### Temperature density
 
-```{r fig.height = 7, message=FALSE}
-#Visual 6: Temperature density
+```{r fig.height = 6, message=FALSE}
+#Visual 2: Temperature density
 
 # adding right and left hand sided labels
 climate_change <- climate_change %>%
@@ -160,16 +161,18 @@ climate_change <- climate_change %>%
   mutate(label_lt = if_else(Month == 1 & Year%%2 != 0, 
                             as.character(Year), NA_character_))
 
-
 ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) + 
   geom_density_ridges_gradient(aes(fill = ..x..), 
                                scale = 3, size = 0.3, alpha = 0.5) +
   geom_vline(xintercept = 0.5, alpha = 0.5, color = "red", linetype = "dotted")+
   scale_fill_gradientn(colours = c("#87CEFA", "#FFFFE0", "#FF0000"),
-                       name = "Temp") +
-  labs(title = 'Shifting Distribution of Land Temperature Anomalies',
+                       name = "Temperature (°C)") +
+  labs(title = 'Shifting Distribution of Earth Temperature',
        subtitle = "Temperature Difference in degrees Celsius from the year 1983 to 2022",
        caption = "NASA: https://svs.gsfc.nasa.gov/4891",) + 
+  theme(plot.title = element_text(face = "bold",
+                                  margin = margin(10, 0, 10, 0),
+                                  size = 14)) +
   theme(legend.position = c(0.8,0.2)) +
   xlab("Temperature") + 
   ylab("Year") + 
@@ -180,6 +183,70 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
 <p align='justify'>
 This visualization shows how the distribution of land temperature anomalies has varied over time. As the planet has warmed, we see the peak of the distribution shifting to the right. The distribution of temperatures broadens as well. This broadening is most likely due to differential regional warming rather than increased temperature variability at any given location.
 </p>
+
+```{r message=FALSE}
+p <- ggplot(climate_change, aes(x = Year, y = Temp, color = Month, group = Month)) +
+    geom_path() +
+    geom_point() +
+    facet_wrap(~ Month) +
+    theme(legend.position = 'none') +
+    labs(title = 'Temperature Variation, Year: {frame_along}') +
+    transition_reveal(along = Year) +
+    ease_aes('linear')
+animate(p, 100, 10)
+```
+
+```{r message=FALSE}
+north_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "N")
+names(north_sea) <- seq(2017, 2022, 1)
+df_north <- ldply(north_sea)
+
+ggplot(df_north, aes(long, lat, group = group)) + 
+  geom_polygon(fill = "steelblue") + 
+  ggtitle("Changes in Sea Ice Level for North pole") + 
+  theme_ice() + 
+  facet_wrap(~.id)
+
+```
+```{r message=FALSE}
+#### South Pole Sea Ice Level
+
+south_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "S")
+names(south_sea) <- seq(2017, 2022, 1)
+df_south <- ldply(south_sea)
+
+# Plot data
+ggplot(df_south, aes(long, lat, group = group)) + 
+  geom_polygon(fill = "steelblue") + 
+  ggtitle("Changes in Sea Ice Level for South pole") + 
+  theme_ice() + 
+  facet_wrap(~.id)
+
+```
+
+```{r message=FALSE}
+
+#library(ggplot2)
+#remove.packages("ggthemes")
+north_data <- read.csv(url("https://www.ncdc.noaa.gov/snow-and-ice/extent/sea-ice/N/8.csv"),skip=3)
+south_data = read.csv(url("https://www.ncdc.noaa.gov/snow-and-ice/extent/sea-ice/S/8.csv"),skip=3)
+
+north_data$'North Sea Ice Level' = north_data$Anomaly
+south_data$'South Sea Ice Level' = south_data$Anomaly
+
+poles_data = merge(north_data[,-c(2,3)], south_data[,-c(2,3)], by="Date")
+#head(poles_data)
+poles_Melted <- reshape2::melt(poles_data, id.var='Date')
+#head(poles_Melted)
+
+ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) + 
+  geom_line(linetype="solid", size=1) +
+  #scale_fill_discrete(name = “Poles”, labels = c(“North Sea Ice Level”, “South Sea Ice Level”)) +
+  xlab("Year") +
+  ylab("Change is Sea Ice Level") +
+  ggtitle("Comparing Changes in Sea Ice Level") +
+  theme_classic()
+```
 
 ### Natural disaster - affected/death and injured
 
@@ -218,11 +285,14 @@ continent_data$affected_all_disasters <- log10(continent_data$affected_all_disas
 ggplot(data=continent_data, aes(x=Entity, y=affected_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
-    ylab("Number of People affected by climate disasters") +
-    labs(title = 'Increase in people affected in ASIA by disasters caused by climate change',
-         subtitle = "Climate related disaster"
+    xlab("C") + 
+    ylab("Number of People affected") +
+    labs(title = 'People affected by climate change disasters',
+         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
+         caption = "Number of people calculated in million",
        ) + 
-    theme_minimal() 
+    labs(x = "") +
+    theme_classic()
     #guides(fill=FALSE)
 
 ```
@@ -237,11 +307,13 @@ continent_data$deaths_all_disasters <- log10(continent_data$deaths_all_disasters
 ggplot(data=continent_data, aes(x=Entity, y=deaths_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
-    ylab("Number of People died by climate disasters") +
-    labs(title = 'Increase in people death in ASIA and North America by disasters caused by climate change',
-         subtitle = "Climate related disaster"
+    ylab("Number of People died") +
+    labs(title = 'People death due to climate change disasters',
+         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
+         caption = "Number of people calculated in million",
        ) + 
-    theme_minimal() 
+    labs(x = "") +
+    theme_classic()
 ```
 
 #### Natural disaster - Injured due to all disaster
@@ -254,11 +326,13 @@ continent_data$injured_all_disasters <- log10(continent_data$injured_all_disaste
 ggplot(data=continent_data, aes(x=Entity, y=injured_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
-    ylab("Number of People injured by climate disasters") +
-    labs(title = 'Increase in people injured in ASIA by disasters caused by climate change',
-         subtitle = "Climate related disaster"
+    ylab("Number of People injured") +
+    labs(title = 'People injured due to climate change disasters',
+         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
+         caption = "Number of people calculated in million",
        ) + 
-    theme_minimal() 
+    labs(x = "") +
+    theme_classic()
 ```
 
 ### Country analysis - affected_flood
@@ -291,7 +365,8 @@ disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
 #Joining disaster data with continent data:
 colnames(continent_data_new)[1] <- "Entity"
 disaster_data_country <- left_join(disaster_data_country, continent_data_new, by = c('Entity'))
-disaster_data_country <- filter(disaster_data_country, (region %in% c("Asia", "Americas","Africa"))) %>% 
+disaster_data_country <- disaster_data_country %>% 
+                        #filter(disaster_data_country, (region %in% c("Asia", "Americas","Africa"))) %>% 
                         drop_na() 
 head(disaster_data_country,2)
 ```
@@ -312,12 +387,13 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 top5_data$affected_temperature <- log10 (top5_data$affected_temperature)
 p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  #xlab("Country") +
-  #ylab("People affected by temperature") +
-  labs(title = 'People affected by temperature - Country',) +
-  theme_minimal() +
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
   coord_flip()
-
 p
 ```
 
@@ -344,10 +420,12 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 top5_data$deaths_wildfire <- log10 (top5_data$deaths_wildfire)
 q <- ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  #xlab("Country") +
-  #ylab("People death by wildfire") +
-  labs(title = 'People affected by widfire - Country',) +
-  theme_minimal() +
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by wildfire',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
   coord_flip()
 q 
 ```
@@ -375,11 +453,12 @@ top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two
 top5_data$injured_flood <- log10 (top5_data$injured_flood)
 r <- ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood,fill=sub.region)) + 
   geom_bar(stat = "identity") + 
-  #theme(legend.position = "none") +
-  #xlab("Country") +
-  #ylab("People injured by flood") +
-  labs(title = 'People affected by flood - Country',) +
-  theme_minimal() +
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by flood',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
   coord_flip()
 r
 ```
@@ -554,29 +633,30 @@ fig
 #### Correlation map
 ```{r message=FALSE}
 # Correlation map
-cc_eri_data_new$Child_nutrition <- as.numeric(as.character(cc_eri_data_new$Child_nutrition))
-cc_eri_data_new$Climate_environmental_shocks <- as.numeric(as.character(cc_eri_data_new$Climate_environmental_shocks))
-cc_eri_data_new$Education <- as.numeric(as.character(cc_eri_data_new$Education))
-cc_eri_data_new$Coastal_floods <- as.numeric(as.character(cc_eri_data_new$Coastal_floods))
-cc_eri_data_new$Heatwaves <- as.numeric(as.character(cc_eri_data_new$Heatwaves))
-cc_eri_data_new$Soil_water_pollution <- as.numeric(as.character(cc_eri_data_new$Soil_water_pollution))
-cc_eri_data_new$Vector_borne_diseases <- as.numeric(as.character(cc_eri_data_new$Vector_borne_diseases))
-cc_eri_data_new$Water_scarcity <- as.numeric(as.character(cc_eri_data_new$Water_scarcity))
+cc_eri_data_new$Child_nutrition <- as.numeric(as.numeric(cc_eri_data_new$Child_nutrition))
+cc_eri_data_new$Climate_environmental_shocks <- as.numeric(as.numeric(cc_eri_data_new$Climate_environmental_shocks))
+cc_eri_data_new$Education <- as.numeric(as.numeric(cc_eri_data_new$Education))
+cc_eri_data_new$Coastal_floods <- as.numeric(as.numeric(cc_eri_data_new$Coastal_floods))
+cc_eri_data_new$Heatwaves <- as.numeric(as.numeric(cc_eri_data_new$Heatwaves))
+cc_eri_data_new$Soil_water_pollution <- as.numeric(as.numeric(cc_eri_data_new$Soil_water_pollution))
+cc_eri_data_new$Vector_borne_diseases <- as.numeric(as.numeric(cc_eri_data_new$Vector_borne_diseases))
+cc_eri_data_new$Water_scarcity <- as.numeric(as.numeric(cc_eri_data_new$Water_scarcity))
+cc_eri_data_new$Aedes <- as.numeric(as.numeric(cc_eri_data_new$Aedes))
+cc_eri_data_new$CCRI <- as.numeric(as.numeric(cc_eri_data_new$CCRI))
+cc_eri_data_new$Communication_assets <- as.numeric(as.numeric(cc_eri_data_new$Communication_assets))
+cc_eri_data_new$Dengue <- as.numeric(as.numeric(cc_eri_data_new$Dengue))
+cc_eri_data_new$Riverine_floods <- as.numeric(as.numeric(cc_eri_data_new$Riverine_floods))
+cc_eri_data_new$Malaria <- as.numeric(as.numeric(cc_eri_data_new$Malaria))
+cc_eri_data_new$Maternal_health <- as.numeric(as.numeric(cc_eri_data_new$Maternal_health))
+cc_eri_data_new$Air_pollution <- as.numeric(as.numeric(cc_eri_data_new$Air_pollution))
 
-cc_eri_corr <- cc_eri_data_new %>% drop_na() 
-#data <- cor(cc_eri_corr[sapply(cc_eri_corr,is.numeric)])
-#data1 <- melt(data)
-#ggplot(data1, aes(x = Var1,
- #                 y = Var2,
-#                  fill = value))+
-#        geom_tile() +
-#        theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
-#corrplot(cor(data),
-  #method = "number",
-  #type = "upper", # show only upper side
-  #)
+cc_eri_corr <- cc_eri_data_new[c(3:7)] %>% drop_na() 
+cc_eri_corr <- cc_eri_corr[-c(1,2)]
 
-#heatmap(data) 
+#library(corrplot)
+
+#corrplot.mixed(cc_eri_corr, lower = "number", upper = "square", number.cex = 0.7,
+ #        order = "hclust")
 
 ```
 
@@ -631,14 +711,6 @@ Observation:
 
 <p align='justify'>
 Observation:
-</p>
-
-### Seasonality in global temperature anomaly
-
-![Global temperature](img/Global-temperature-change-climate-change-facts-infographic.gif)
-
-<p align='justify'>
-This visualization illustrates the warming in a series of circles, each one portraying a year in the historical climate record spanning 1850 to 2016. As time passes and the planet warms, the circles expand outward
 </p>
 
 ## Additional visualizations and further analyses with the data
