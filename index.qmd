@@ -39,6 +39,7 @@ require(plyr)
 library(rnoaa)
 library(rgdal)
 library(ggthemes)
+library(lubridate)
 ```
 
 This slide deck presents the main insights:
@@ -51,7 +52,9 @@ This slide deck presents the main insights:
 
 Detailed project report
 
-## Outline
+## Executive Summary
+
+## Introduction
 <p align='justify'>
 *Climate Science* has become an intimidating subject matter which is drawing attention in recent days.
 It is evident that human activities are driving the global warming since mid-20th century. The industrial activities that our modern civilization has taken up leads to raised atmospheric carbon dioxide levels.
@@ -70,6 +73,8 @@ Climate impacts heading into uncharted territory of destruction by increasingly 
 3. Analysis on children vulnerability to climatic change with respective to Children Climate risk index(CCRI) data.
 </p>
 
+## Methodology and resulting outcomes
+
 **Data Source**
 <br>
 The Key metrics which contributes to the global climate change is maintained by Our World in Data. 
@@ -86,13 +91,14 @@ Data source will be accessed by from Github API with *R* language. There are 3 d
 4. Children’s Climate and Environment Risk Index<br>
     Link : *<https://sdmx.data.unicef.org/webservice/data.html>*
 
-Code to extract data:
+Set directory and load data
 ```{r}
 #Code to extract data:
 climate_change <- read.csv(file = "data/climate_change.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 cceri_data <- read.csv(file = "data/CC_ERI.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 continent <- read.csv(file = "data/Continents.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+population <- read.csv(file = "data/world_population.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 ```
 
 Statistical analysis
@@ -117,7 +123,7 @@ apply(is.na(cceri_data),2, sum)
 #apply(is.na(natural_disaster_data),2, sum)
 ```
 
-## Main visualization of the data 
+## Initial Visualisations
 
 ### Global surface temperature
 
@@ -208,6 +214,7 @@ ggplot(df_north, aes(long, lat, group = group)) +
   facet_wrap(~.id)
 
 ```
+
 ```{r message=FALSE}
 #### South Pole Sea Ice Level
 
@@ -247,6 +254,117 @@ ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) +
   ggtitle("Comparing Changes in Sea Ice Level") +
   theme_classic()
 ```
+### MEI 
+
+```{r message=FALSE}
+climate_change <- climate_change %>% mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1))) 
+
+climate_change %>%
+  arrange(year_month) %>%
+  ggplot() + 
+  geom_line(aes(year_month, MEI, color = MEI), size = 1) +
+  scale_color_gradient2(low = 'blue', high = 'red') + 
+  labs(title = "Multivariate El Nino Southern Oscillation index by Year", 
+       caption = "Source: ESRL/NOAA Physical Sciences Division") + 
+  xlab("Year") +
+  ylab("MEI") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+```
+
+### Carbon dioxide
+
+```{r message=FALSE}
+climate_change_chart <- ggplot(climate_change, aes(x = Year, y = Temp, fill = CO2)) + 
+  xlab("Year") +
+  ylab("Temperature") +
+  theme_minimal(base_size = 14)
+
+barplot <- climate_change_chart +
+  geom_bar( position = "dodge", stat = "identity",color= "white")
+ggplotly(barplot)
+
+```
+
+```{r message=FALSE}
+climate_change_ymd <- climate_change %>%
+  mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1))) 
+
+scat_plot1 <-  ggplot(climate_change_ymd, aes(year_month, CO2))+geom_line(colour="blueviolet")+geom_smooth(method = "lm")+ggtitle("Carbon Dioxide") + theme_minimal(base_size = 14)
+scat_plot2<-  ggplot(climate_change_ymd, aes(year_month, N2O))+geom_line()+geom_smooth(method = "lm")+ggtitle("Nitrous Oxide") + theme_minimal(base_size = 14)
+scat_plot3<-  ggplot(climate_change_ymd, aes(year_month, CH4))+geom_line(colour="springgreen4")+geom_smooth(method = "lm")+ggtitle("Methane") + theme_minimal(base_size = 14)
+scat_plot4 <-  ggplot(climate_change_ymd, aes(year_month, MEI))+geom_line(colour="mediumorchid4")+ggtitle("MEI") + theme_minimal(base_size = 14)
+grapgh_arrange<-ggarrange(scat_plot1, scat_plot2, scat_plot3, scat_plot4 + rremove("x.text"), 
+          labels = c("A", "B", "C", "D"),
+          ncol = 2, nrow = 2)
+annotate_figure(grapgh_arrange,
+                top = text_grob("Vartations of CO_2, N2O, CH4 and MEI by year", color = "red", face = "bold", size = 14)
+)
+
+```
+
+```{r message=FALSE}
+climate_change %>%
+  arrange(year_month) %>%
+  ggplot(aes(year_month, CO2)) + 
+  geom_line() +
+  geom_smooth(se = FALSE, linetype = "dotted", color = "red") +
+  labs(title = "Carbon-dioxide by Year", 
+       caption = "Source: ESRL/NOAA Global Monitoring Division") + 
+  xlab("Year") +
+  ylab("CO2 (ppmv)") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic()
+```
+### Methane
+```{r message=FALSE}
+climate_change %>%
+  arrange(year_month) %>%
+  ggplot(aes(year_month, CH4)) + 
+  geom_line() +
+  geom_smooth(se=FALSE, linetype = "dotted", color = "red") +
+  labs(title = "Methane by Year", 
+       caption = "Source: ESRL/NOAA Global Monitoring Division") + 
+  xlab("Year") +
+  ylab("CH4 (ppmv)") + 
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  theme_classic()
+```
+### Nitrous Oxide
+```{r message=FALSE}
+climate_change %>%
+  arrange(year_month) %>%
+  ggplot() + 
+  geom_line(aes(year_month, N2O)) +
+  labs(title = "Nitrous Oxide by Year", 
+       caption = "Source: ESRL/NOAA Global Monitoring Division") + 
+  xlab("Year") +
+  ylab("N2O (ppmv)") + 
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r message=FALSE}
+library(gganimate)
+ggplot(climate_change, aes(Year, Temp, size = CO2, colour = Month)) + geom_point(alpha = 0.2, show.legend = FALSE) +
+  facet_wrap(~Month) +
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'Year', y = 'Temperature') +
+  transition_time(Year) +
+  ease_aes('linear')
+```
+
+```{r message=FALSE}
+p <- ggplot(climate_change, aes(x = Year, y = Temp, color = Month, group = Month)) +
+    geom_path() +
+    geom_point() +
+    facet_wrap(~ Month) +
+    theme(legend.position = 'none') +
+    labs(title = 'Temperature Variation, Year: {frame_along}') +
+    transition_reveal(along = Year) +
+    ease_aes('linear')
+animate(p, 100, 10)
+```
 
 ### Natural disaster - affected/death and injured
 
@@ -254,18 +372,18 @@ ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) +
 ##Pre-processing
 #Selecting only required columns from Natural disaster data for further analysis and visualization
 disaster_data <- natural_disaster_data %>% 
-                  select(Entity,Year, 
-                  affected_all_disasters,affected_temperature,affected_flood,affected_wildfire,
-                  deaths_all_disasters, deaths_temperature, deaths_flood, deaths_wildfire,
-                  injured_all_disasters, injured_temperature, injured_flood, injured_wildfire
-                  ) %>%
+                  select(Entity,Year, affected_all_disasters, affected_temperature, affected_flood, affected_wildfire, 
+                         deaths_all_disasters, deaths_temperature, deaths_flood, deaths_wildfire,
+                         homeless_all_disasters, homeless_temperature, homeless_flood, homeless_wildfire,
+                         injured_all_disasters, injured_temperature, injured_flood, injured_wildfire,
+                         total_affected_all_disasters, total_affected_temperature, total_affected_flood, total_affected_wildfire,total_damages_pct_gdp_all_disasters, total_damages_pct_gdp_temperature, total_damages_pct_gdp_flood, total_damages_pct_gdp_wildfire) %>%
                   group_by(Entity) %>% filter(Year == max(Year)) %>% # Take the most recent date per country
                   group_by() %>% #removing groupby
                   drop_na() 
 
 #Selecting only continents from the dataset:
 # Asia, Africa, North America, South America, Antarctica, Europe, and Australia.
-
+#names (natural_disaster_data)
 continent_data <- filter(disaster_data, 
                          Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica",
                                      "Europe", "Australia"))
@@ -278,18 +396,166 @@ Observation:
 #### Natural disaster - Affected due to all disaster
 
 ```{r message=FALSE}
-# No legend, since the information is redundant
-# Add y axis units - TBD
-continent_data$affected_all_disasters <- log10(continent_data$affected_all_disasters) 
+continent_data_new <- continent %>% 
+              select(name,alpha.3,region,sub.region) %>%
+              drop_na()
+
+#Joining disaster data with continent data:
+colnames(continent_data_new)[1] <- "Entity"
+disaster_data_country <- left_join(disaster_data, continent_data_new, by = c('Entity'))
+disaster_data_country <- disaster_data_country %>% 
+                        #filter(disaster_data_country, (region %in% c("Asia", "Americas","Africa"))) %>% 
+                        drop_na() 
+#head(disaster_data_country,2)
+
+#Joining population dataset to disaster data
+
+#population <- population %>% select(CCA3, Entity,X2010.Population)
+#colnames(population)[2] <- "Entity"
+#disaster_data_country <- left_join(disaster_data_country, population, by = c('Entity'))
+#disaster_data_country <- disaster_data_country %>% 
+                        #drop_na() 
+head(disaster_data_country,2)
+```
+
+```{r message=FALSE}
+#all_infected <- aggregate(x = disaster_data_country$affected_all_disasters,                # Specify data column
+ #         by = list(disaster_data_country$region),              # Specify group indicator
+  #          FUN = mean) 
+#continent_data$affected_all_disasters= 100*(continent_data$affected_all_disasters/sum(continent_data$affected_all_disasters))
+```    
+
+```{r message=FALSE}
+#all_infected$score_percen= 100*(all_infected$x/sum(all_infected$x))
+#all_infected
+#disaster_data_country$affected_all_disasters = log(as.data.frame(disaster_data_country$affected_all_disasters))
+#disaster_data_country$affected_all_disasters <- as.numeric(as.character(disaster_data_country$affected_all_disasters))
+```
+
+```{r message=FALSE}
+#disaster_data_country_new <- disaster_data_country %>%
+#                              drop_na() %>%
+#                              mutate(all_affected = #(disaster_data_country$affected_all_disasters/disaster_data_country$X2010.Population)*100)
+```
+
+```{r message=FALSE}
+#disaster_data_country_new$all_affected <- log(disaster_data_country_new$all_affected) 
+
+#disaster_data_country_new$affected_all_disasters <- as.integer(disaster_data_country_new$population) 
+#disaster_data_country_new$all_affected <- format(round(disaster_data_country_new$all_affected, 2), nsmall = 2) 
+#disaster_data_country_new <- disaster_data_country_new %>%
+                              #mutate(all_affected = (all_affected*100))
+```
+
+```{r message=FALSE}
+#ggplot(disaster_data_country, aes(x=region, y=as.integer(affected_all_disasters))) + 
+ # geom_bar(stat = "identity")
+
+```
+
+```{r message=FALSE}
+#disaster_data_country_new <- disaster_data_country %>%
+#                              drop_na() %>%
+#                              mutate(all_affected = #(disaster_data_country$affected_all_disasters/disaster_data_country$X2010.Population)*100)
+```
+
+#### Natural disaster - affected_all_disasters
+
+```{r message=FALSE}
+# affected_all_disasters
+continent_data$affected_all_disasters= 100*(continent_data$affected_all_disasters/sum(continent_data$affected_all_disasters))
 
 ggplot(data=continent_data, aes(x=Entity, y=affected_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
     xlab("C") + 
-    ylab("Number of People affected") +
+    ylab("percentage of People affected") +
     labs(title = 'People affected by climate change disasters',
          subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people calculated in million",
+         caption = "Number of people is calculated in percentage",
+       ) + 
+    labs(x = "") +
+    theme_classic()
+    #guides(fill=FALSE)
+```
+
+```{r message=FALSE}
+names(disaster_data_country)
+```
+
+```{r message=FALSE}
+# Checking the top 5 countries having affected_temperature due to disaster:
+disaster_data_country_asia <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia$affected_temperature,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data_country_asia[sorted[1:10],]
+top5 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data_country_asia,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top5_data$affected_temperature <- log (top5_data$affected_temperature)
+p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+```{r message=FALSE}
+# Checking the top 5 countries having affected_flood due to disaster:
+disaster_data_country_asia <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia$affected_flood,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data_country_asia[sorted[1:10],]
+top5 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data_country_asia,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top5_data$affected_flood <- log (top5_data$affected_flood)
+p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_flood), y=affected_flood, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+#### Natural disaster - deaths_all_disasters
+
+```{r message=FALSE}
+# No legend, since the information is redundant
+# Add y axis units - TBD
+#continent_data$affected_temperature <- log(continent_data$affected_temperature) 
+
+continent_data$deaths_all_disasters= 100*(continent_data$deaths_all_disasters/sum(continent_data$deaths_all_disasters))
+
+ggplot(data=continent_data, aes(x=Entity, y=deaths_all_disasters)) +
+    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
+    coord_flip() +
+    xlab("C") + 
+    ylab("percentage of People died") +
+    labs(title = 'People affected by climate change disasters',
+         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
+         caption = "Number of people is calculated in percentage",
        ) + 
     labs(x = "") +
     theme_classic()
@@ -297,52 +563,370 @@ ggplot(data=continent_data, aes(x=Entity, y=affected_all_disasters)) +
 
 ```
 
-#### Natural disaster - death due to all disaster
 
 ```{r message=FALSE}
-# No legend, since the information is redundant
-# Add y axis units - TBD
-continent_data$deaths_all_disasters <- log10(continent_data$deaths_all_disasters) 
+# Checking the top 5 countries having deaths_all_disasters due to disaster:
+disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
+                                                              "Americas")))
+sorted = sort(disaster_data_country_americas$deaths_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
 
-ggplot(data=continent_data, aes(x=Entity, y=deaths_all_disasters)) +
+#Subseting Top20 countries by April 25th
+top5 <- disaster_data_country_americas[sorted[1:10],]
+top5 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top5$Entity <- as.character(top5$Entity) # make the country names as character
+#To plot:
+top5_data <- dplyr::inner_join(disaster_data_country_americas,top5,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top5_data$deaths_all_disasters <- log (top5_data$deaths_all_disasters)
+p <- ggplot(top5_data, aes(x = reorder(Entity, +deaths_all_disasters), y=deaths_all_disasters, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+```{r message=FALSE}
+# Checking the top 5 countries having deaths_wildfire due to disaster:
+disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
+                                                              "Americas")))
+sorted = sort(disaster_data_country_americas$deaths_wildfire,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_americas[sorted[1:3],]
+top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:3]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_americas,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$deaths_wildfire <- log (top10_data$deaths_wildfire)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+```{r message=FALSE}
+# Checking the top 5 countries having deaths_flood due to disaster:
+disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
+                                                              "Americas")))
+sorted = sort(disaster_data_country_americas$deaths_flood,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_americas[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_americas,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$deaths_flood <- log (top10_data$deaths_flood)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_flood), y=deaths_flood, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+#### Natural disaster - homeless_all_disasters
+
+```{r message=FALSE}
+# homeless_all_disasters
+
+continent_data$homeless_all_disasters= 100*(continent_data$homeless_all_disasters/sum(continent_data$homeless_all_disasters))
+
+ggplot(data=continent_data, aes(x=Entity, y=homeless_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
-    ylab("Number of People died") +
+    ylab("percentage of People homeless") +
     labs(title = 'People death due to climate change disasters',
          subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people calculated in million",
+         caption = "Number of people homeless is calculated in perentage",
        ) + 
     labs(x = "") +
     theme_classic()
 ```
 
-#### Natural disaster - Injured due to all disaster
+```{r message=FALSE}
+# Checking the top 5 countries having deaths_flood due to disaster:
+disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_homeless$homeless_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$homeless_all_disasters <- log (top10_data$homeless_all_disasters)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_all_disasters), y=homeless_all_disasters, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
 
 ```{r message=FALSE}
-# No legend, since the information is redundant
-# Add y axis units - TBD
-continent_data$injured_all_disasters <- log10(continent_data$injured_all_disasters) 
+# Checking the top 5 countries having homeless_temperature due to disaster:
+disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_homeless$homeless_temperature,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$homeless_temperature <- log (top10_data$homeless_temperature)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_temperature), y=homeless_temperature, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+```{r message=FALSE}
+# Checking the top 5 countries having homeless_flood due to disaster:
+disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_homeless$homeless_flood,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$homeless_flood <- log (top10_data$homeless_flood)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flood, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+```{r message=FALSE}
+# injured_all_disasters
+
+continent_data$injured_all_disasters= 100*(continent_data$injured_all_disasters/sum(continent_data$injured_all_disasters))
 
 ggplot(data=continent_data, aes(x=Entity, y=injured_all_disasters)) +
     geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
     coord_flip() +
-    ylab("Number of People injured") +
-    labs(title = 'People injured due to climate change disasters',
+    ylab("percentage of total damages pct gdp all disaster") +
+    labs(title = 'People death due to climate change disasters',
          subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people calculated in million",
+         caption = "Number of people is calculated in perentage",
        ) + 
     labs(x = "") +
     theme_classic()
 ```
 
-### Country analysis - affected_flood
-
 ```{r message=FALSE}
-continent_data_new <- continent %>% 
-              select(name,alpha.3,region,sub.region) %>%
-              drop_na()
+# Checking the top 5 countries having injured_all_disasters due to disaster:
+disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_injured$injured_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_injured[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$injured_all_disasters <- log (top10_data$injured_all_disasters)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_all_disasters), y=injured_all_disasters, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
 ```
 
+```{r message=FALSE}
+# Checking the top 5 countries having injured_temperature due to disaster:
+disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_injured$injured_temperature,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_injured[sorted[1:7],]
+top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:7]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$injured_temperature <- log (top10_data$injured_temperature)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_temperature), y=injured_temperature, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+```{r message=FALSE}
+# Checking the top 5 countries having injured_flood due to disaster:
+disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia")))
+sorted = sort(disaster_data_country_asia_injured$injured_flood,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_asia_injured[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$injured_flood <- log (top10_data$injured_flood)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+#### Natural disaster - total_damages_pct_gdp_all_disasters
+
+```{r message=FALSE}
+# total_damages_pct_gdp_all_disasters
+
+continent_data$total_damages_pct_gdp_all_disasters= 100*(continent_data$total_damages_pct_gdp_all_disasters/sum(continent_data$total_damages_pct_gdp_all_disasters))
+
+ggplot(data=continent_data, aes(x=Entity, y=total_damages_pct_gdp_all_disasters)) +
+    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
+    coord_flip() +
+    ylab("percentage of total damages pct gdp all disaster") +
+    labs(title = 'People death due to climate change disasters',
+         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
+         caption = "Number of people is calculated in perentage",
+       ) + 
+    labs(x = "") +
+    theme_classic()
+```
+```{r message=FALSE}
+# Checking the top 5 countries having total_damages_pct_gdp_all_disasters due to disaster:
+disaster_data_country_gdp <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia","Americas")))
+sorted = sort(disaster_data_country_gdp$total_damages_pct_gdp_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_gdp[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_gdp$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_gdp,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$total_damages_pct_gdp_all_disasters <- log (top10_data$total_damages_pct_gdp_all_disasters)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +total_damages_pct_gdp_all_disasters), y=total_damages_pct_gdp_all_disasters, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+```{r message=FALSE}
+# Checking the top 5 countries having total_damages_pct_gdp_temperature due to disaster:
+disaster_data_country_gdp <- filter(disaster_data_country, (region %in% c(
+                                                              "Asia","Americas")))
+sorted = sort(disaster_data_country_gdp$total_damages_pct_gdp_temperature,decreasing = TRUE,index.return=TRUE)$ix
+
+#Subseting Top20 countries by April 25th
+top10 <- disaster_data_country_gdp[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_gdp$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+#To plot:
+top10_data <- dplyr::inner_join(disaster_data_country_gdp,top10,by="Entity") #join two tables together 
+#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+
+#Barplot
+top10_data$total_damages_pct_gdp_temperature <- log (top10_data$total_damages_pct_gdp_temperature)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +total_damages_pct_gdp_temperature), y=total_damages_pct_gdp_temperature, fill=sub.region)) + 
+  geom_bar(stat = "identity") + 
+  xlab(" ") +
+  ylab("Number of people affected") +
+  labs(title = 'Country affected by temperature',
+       subtitle = "Number of people affected calculated in million"
+       ) + 
+  theme_classic() +
+  coord_flip()
+p
+```
+
+### Country analysis - affected_flood
+## remove this
 ```{r message=FALSE}
 # Affected all disaster
 disaster_data_country <- filter(disaster_data, !(Entity %in% c("World",
@@ -370,105 +954,11 @@ disaster_data_country <- disaster_data_country %>%
                         drop_na() 
 head(disaster_data_country,2)
 ```
-
-```{r message=FALSE}
-# Checking the top 5 countries having affected_temperature due to disaster:
-sorted = sort(disaster_data_country$affected_temperature,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
-#To plot:
-top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top5_data$affected_temperature <- log10 (top5_data$affected_temperature)
-p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
-  coord_flip()
-p
-```
-
 <p align='justify'>
 Observation:
 </p>
 
-### Country analysis - deaths_wildfire
 
-```{r message=FALSE}
-#deaths_all_disasters
-# Checking the top 5 countries having affected_temperature due to disaster:
-sorted = sort(disaster_data_country$deaths_wildfire,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
-#To plot:
-top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top5_data$deaths_wildfire <- log10 (top5_data$deaths_wildfire)
-q <- ggplot(top5_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by wildfire',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
-  coord_flip()
-q 
-```
-
-<p align='justify'>
-Observation:
-</p>
-
-### Country analysis - injured_flood
-
-```{r message=FALSE}
-#deaths_all_disasters
-# Checking the top 5 countries having affected_temperature due to disaster:
-sorted = sort(disaster_data_country$injured_flood,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country[sorted[1:5],]
-top5 <- data.frame(Entity=disaster_data_country$Entity[sorted[1:5]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
-#To plot:
-top5_data <- dplyr::inner_join(disaster_data_country,top5,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top5_data$injured_flood <- log10 (top5_data$injured_flood)
-r <- ggplot(top5_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood,fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by flood',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
-  coord_flip()
-r
-```
-
-```{r fig.height = 4,fig.width=5, message=FALSE}
-#figure <- ggarrange(p, q, r,
-                    #labels = c("A", "B", "C"),
-                    #ncol = 2, nrow = 2)
-#figure
-```
 <p align='justify'>
 Observation:
 </p>
@@ -502,6 +992,30 @@ names(cc_eri_data_new) <- sub(" ", "_", names(cc_eri_data_new))
 <p align='justify'>
 Observation:
 </p>
+
+```{r message=FALSE}
+##Pre-processing
+#Selecting only required columns from CC_ERI data for further analysis and visualization
+cceri_data <- cceri_data %>% 
+              select(REF_AREA,Geographic.area,Indicator,Value) %>%
+              drop_na()
+
+cceri_data <- cceri_data[!apply(is.na(cceri_data) | cceri_data == "", 1, any),]
+
+cc_eri_data_new <- cceri_data %>%
+                  pivot_wider(names_from = "Indicator",
+                              values_from = "Value"
+                              ) %>% 
+                  drop_na() 
+
+#Checking the number of rows and columns
+#dim(cc_eri_data_new)
+
+#Removing space in the column names of the dataset
+names(cc_eri_data_new) <- sub(" ", "_", names(cc_eri_data_new))
+
+#summary (cc_eri_data_new)
+```
 
 ```{r message=FALSE}
 #Renaming the variables:
