@@ -50,6 +50,32 @@ This slide deck presents the main insights:
 Detailed project report
 
 ## Executive Summary
+<p align='justify'>
+
+The Earth's climate is changing in unprecedented ways, according to scientists. Since the Industrial Revolution, the global average temperature has risen by one degree Celsius. Although this may not appear to be much, it has already had a significant impact on how our planet functions. This data visualization report assists us in answering three major questions: the causes and effects of climate change, the trend of natural disasters caused by global warming, and the climatic change in relation to Children Climate Risk Index (CCRI) data.
+</p>
+
+<p align='justify'>
+
+Natural disasters have been exacerbated by climate change. Drought, heatwaves, flood, fog, wildfire, and glacial lake are some of these disasters. People all over the world have been affected by these natural disasters. According to the analysis, Asia is the most affected by most climate-related disasters, with China being the most affected by extreme temperature and flooding. Furthermore, North America has the highest number of deaths from climate-related natural disasters, with Haiti having the highest number of deaths on the continent. In addition, Southern Asia has the highest number of people who have become homeless as a result of these natural disasters, with India being the most affected. Surprisingly, the continent with the greatest impact (30%) is North America.
+</p>
+
+
+<p align='justify'>
+The CCRI index seeks to identify which countries or regions are at risk of humanitarian crises affecting children and child deprivation worsening as a result of their vulnerability to climate and environmental shocks or pressures. According to the CCRI map, children in the Central African Republic (8.7), Chad (8.5), Nigeria (8.5), Guinea (8.4), and Guinea-Bissau (8.4) are the most vulnerable to climate change effects, while children in New Zealand (1.6), Luxembourg (1.5), and Iceland (1.0) appear to be the safest.
+</p>
+
+
+<p align='justify'>
+
+As a result of enormous global environmental, sociological, and economic disruption brought on by climate change, the world is approaching an unprecedented period. By investigating and analyzing the sources of greenhouse gas emissions brought on by the industrial revolution, we can help and protect society in general and children in particular.
+</p>
+
+<p align='justify'>
+
+Policymakers must develop better listening skills and incorporate the viewpoints and experiences of young people into climate policies and processes in order to confront this catastrophe.
+</p>
+
 
 ## Introduction
 <p align='justify'>
@@ -115,10 +141,6 @@ df_north <- read.csv(file = "data/North_pole_sea_level.csv",TRUE, sep = ",", str
 
 #### Global surface temperature rise
 
-<p align='justify'>
-Air temperatures on Earth have been rising since the Industrial Revolution. According to an ongoing temperature analysis led by scientists at NASA’s Goddard Institute for Space Studies (GISS), the average global temperature on Earth has increased by at least 1.1° Celsius (1.9° Fahrenheit) since 1880. A one-degree global change is significant because it takes a vast amount of heat to warm all of the oceans, the atmosphere, and the land masses by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age. A five-degree drop was enough to bury a large part of North America under a towering mass of ice 20,000 years ago.
-</p>
-
 ```{r message=FALSE}
 #### Visual 1: adding Year-Month variable as year_date
 climate_change$year <- as.yearmon(paste(climate_change$Year, climate_change$Month), "%Y %m")
@@ -143,13 +165,12 @@ ggplot(climate_change, aes(year, Temp)) +
   theme(panel.grid.minor = element_blank()) 
 ```
 
-
 <p align='justify'>
-The line chart depicts ,the global temperature has been increasing since 1990, with the 2010–2019 decade being the warmest on record. The hottest year on record was 2016, and it was followed by 2019 and 2020. In the Arctic, where temperatures have risen at a rate that is roughly twice as fast as the world average, the warming trend has been particularly noticeable.
+Air temperatures on Earth have been rising since the Industrial Revolution. According to an ongoing temperature analysis led by scientists at NASA’s Goddard Institute for Space Studies (GISS), the average global temperature on Earth has increased by at least 1.1° Celsius (1.9° Fahrenheit) since 1880. A one-degree global change is significant because it takes a vast amount of heat to warm all of the oceans, the atmosphere, and the land masses by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age. A five-degree drop was enough to bury a large part of North America under a towering mass of ice 20,000 years ago.
 </p>
 <p align='justify'>
-The Earth's climate has been greatly impacted by this warming trend, which has led to more frequent and severe heatwaves, droughts, and extreme weather events like storms and floods. Additionally, it has aided in the glacier and polar ice cap melting that is raising sea levels.
-</p>
+As seen from the line chart above,the global temperature has been increasing since 1990, with the 2010–2019 decade being the warmest on record. The hottest year on record was 2016, and it was followed by 2019 and 2020. In the Arctic, where temperatures have risen at a rate that is roughly twice as fast as the world average, the warming trend has been particularly noticeable.
+</p>    
 
 #### Global Temperature density
 
@@ -191,15 +212,7 @@ This broadening is most likely due to differential regional warming rather than 
 
 ### Sea level change due to climate change
 
-<p align='justify'>
-Changes in the amount of sea ice can disrupt normal ocean circulation, thereby leading to changes in global climate.  Even a small increase in temperature can lead to greater warming over time, making the polar regions the most sensitive areas to climate change on Earth.
-</p>
-
 #### North pole Sea level
-
-<p align='justify'>
-The Arctic Ocean is covered in layers of frozen seawater. Each winter, this sea ice increases significantly, usually reaching its peak in March. Every summer, it melts just as dramatically, reaching its lowest point in September. Although there has been a natural variation for thousands of years, recent decades have seen a decline in winter and summer trends.
-</p>
 
 ```{r message=FALSE}
 # North pole Sea level
@@ -218,14 +231,16 @@ ggplot(df_north, aes(long, lat, group = group)) +
 ```
 
 <p align='justify'>
+Changes in the amount of sea ice can disrupt normal ocean circulation, thereby leading to changes in global climate.  Even a small increase in temperature can lead to greater warming over time, making the polar regions the most sensitive areas to climate change on Earth.
+</p>
+<p align='justify'>
+The Arctic Ocean is covered in layers of frozen seawater. Each winter, this sea ice increases significantly, usually reaching its peak in March. Every summer, it melts just as dramatically, reaching its lowest point in September. Although there has been a natural variation for thousands of years, recent decades have seen a decline in winter and summer trends.
+</p>
+<p align='justify'>
 The visualizations show the warmer water rise overtime due to thermal expansion and dissolves floating ice shelves. The Polar Regions are under severe risk because of the enormous sizes of the Antarctic and Greenlandic ice sheets.
 </p>
 
 #### South Pole Sea Ice Level
-
-<p align='justify'>
-While Arctic sea ice is melting at an unprecedented rate, Antarctic sea ice is moving in the opposite direction.
-</p>
 
 ```{r message=FALSE}
 #### South Pole Sea Ice Level
@@ -247,6 +262,10 @@ ggplot(df_south, aes(long, lat, group = group)) +
   facet_wrap(~.id)
 
 ```
+
+<p align='justify'>
+While Arctic sea ice is melting at an unprecedented rate, Antarctic sea ice is moving in the opposite direction.
+</p>
 <p align='justify'>
 This is due to the fact that icy winds blowing off Antarctica, as well as a powerful ocean current that circles the frozen continent, are far more important factors in the formation and persistence of Antarctic sea ice than temperature changes.
 </p>
@@ -326,10 +345,6 @@ Other greenhouse gases are emitted by human activities in smaller quantities. Me
 
 #### Carbon Dioxide level changes
 
-<p align='justify'>
-Beginning of the industrial revolution, the carbon dioxide emissions produced by industrial operations and the global burning of fossil fuels have dramatically increased at a constant rapid rate. 
-</p>
-
 ```{r message=FALSE}
 climate_change <- climate_change %>% filter(year <= 2008)
 
@@ -347,15 +362,11 @@ barplot <- co2_chart +
 ```
 
 <p align='justify'>
-Emissions of carbon dioxide (CO2) increased rapidly starting in the 1950s and peaked in 2000 at 25.23 billion tons. Between 2000 and 2010, emissions increased by 32 percent.
+Since the beginning of the industrial revolution, the carbon dioxide emissions produced by industrial operations and the global burning of fossil fuels have dramatically increased at a constant rapid rate. Emissions of carbon dioxide (CO2) increased rapidly starting in the 1950s and peaked in 2000 at 25.23 billion tons. Between 2000 and 2010, emissions increased by 32 percent.
 </p>
 
-#### Vartations of CO_2, N2O, CH4 and Aerosols by year
+#### Vartations of CO_2, N2O, CH4 and MEI by year
 
-<p align='justify'>
-CO2, N2O and CH4 and Aerosols are harmful gases released into atmosphere due to industrial revolution. These are harmful gases to human being. The following graphs demonstrates the trend in these harmful gases in the year 2010. Here CO2, N2O and CH4 are expressed in ppmv (parts per million by volume  – i.e., 397 ppmv of CO2 means that CO2 constitutes 397 millionths of the total volume of the atmosphere). CFC.11 and CFC.12 are expressed in ppbv (parts per billion by volume).
-</p>
- 
 ```{r message=FALSE}
 climate_change_ymd <- climate_change %>%
   mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1))) 
@@ -411,7 +422,7 @@ Tiny liquid and solid particles suspended in atmosphere can cause climate change
 Climate change can increase disaster risk in a variety of ways - by altering the frequency and intensity of hazard events, affecting vulnerability to hazards, and changing exposure patterns.
 </p>
 <p align='justify'>
-The next visualizations would show how climate change has contributed to several natural disasters and its effects on people in the year 2010. The dataset has historical data, however 2010 is taken as the latest year avaiable in the data.
+The next visualizations would show how climate change has contributed to several natural disasters and its effects on people.
 </p>
 
 ```{r message=FALSE}
@@ -445,11 +456,7 @@ disaster_data_country <- disaster_data_country %>%
                         drop_na() 
 ```
 
-#### Countries affected due to all disaster in all continents in 2010
-
-<p align='justify'>
-Climate change has contributed to the occurrence of natural disasters. Some of these disasters include drought, heatwaves, flood, fog, wildfire, glacial lake. These natural disasters have affected people all over the world. Natural disasters are becoming more common around the world. Floods and storms, as well as droughts and heat waves, are causing increasingly severe natural disasters, which are defined as causing at least 100 deaths or affecting the basic survival needs of at least 1,000 people. In recent decades, the Asia-Pacific region has seen some of the most devastating natural disasters, with dire consequences for human welfare. At the same time, the region's climate has been changing. Temperatures have been higher on average, but they have also been more variable and extreme.
-</p>
+#### Countries affected due to all disaster in all continents
 
 ```{r message=FALSE}
 
@@ -460,21 +467,19 @@ pct <- round(100*continent_data$affected_all_disasters/sum(continent_data$affect
 pie(continent_data$affected_all_disasters,
     labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
     col = rainbow(length(continent_data$affected_all_disasters)), 
-    main = "Continents affected by climate change disasters in 2010")
+    main = "Continents affected by climate change disasters")
 
 # Calculate percentages
 #pct_all_disas <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
 ```
-
 <p align='justify'>
-From the chart, the people of Asia have been most affected by climate change related natural disasters. About 80% of people affected come from Asia which is significantly higher than other continents.  Next is Africa with about 10% and North America with 8% of people affected.
+Climate change has contributed to the occurrence of natural disasters. Some of these disasters include drought, heatwaves, flood, fog, wildfire, glacial lake. These natural disasters have affected people all over the world. Natural disasters are becoming more common around the world. Floods and storms, as well as droughts and heat waves, are causing increasingly severe natural disasters, which are defined as causing at least 100 deaths or affecting the basic survival needs of at least 1,000 people. In recent decades, the Asia-Pacific region has seen some of the most devastating natural disasters, with dire consequences for human welfare. At the same time, the region's climate has been changing. Temperatures have been higher on average, but they have also been more variable and extreme.
+</p>
+<p align='justify'>
+From the chart, the people of Asia have been most affected by climate change related natural disasters. Over 79% of people affected come from Asia which is significantly higher than other continents.  Next is Africa with about 10% and North America with 8% of people affected.
 </p>
 
-##### Countries affected due extreme temperature in Asia in 2010
-
-<p align='justify'>
-Temperatures are rising two times faster in Asia than the global average, which is associated with the increased frequency and severity of weather-related natural disasters. Asia had its warmest year on record in 2020, with the mean temperature 1.39 °C above the 1981–2010 average. Extreme weather – record-breaking heat waves, severe drought, and deadly rainfall – have battered China. 
-</p>
+##### Countries affected due extreme temperature in Asia
 
 ```{r message=FALSE}
 # Checking the top 10 countries having extreme temperature due to disaster:
@@ -495,7 +500,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_temperature), y=affect
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("Number of people affected (%)") +
-  labs(title = 'Countries affected by extreme temperature in Asia in 2010',
+  labs(title = 'Countries affected by extreme temperature in Asia',
        caption = "Number of people is calculated in percentage"
        ) + 
   theme_classic() +
@@ -503,7 +508,9 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_temperature), y=affect
   coord_flip()
 p
 ```
-
+<p align='justify'>
+Temperatures are rising two times faster in Asia than the global average, which is associated with the increased frequency and severity of weather-related natural disasters. Asia had its warmest year on record in 2020, with the mean temperature 1.39 °C above the 1981–2010 average. Extreme weather – record-breaking heat waves, severe drought, and deadly rainfall – have battered China. 
+</p>
 <p align='justify'>
 From the bar plot, China has had over 16 million people affected as a result of rising temperature. It is the most affected country in Asia with increased heat waves. This is closely followed by Mongolia with 12 million and Thailand with about 11 million people affected.
 </p>
@@ -511,12 +518,7 @@ From the bar plot, China has had over 16 million people affected as a result of 
 In recent years, China has reported more extreme weather events, such as high temperatures and heavy precipitation, indicating that the risk of climate change is increasing. Between 1961 and 2020, extreme heavy precipitation events increased, while significantly more extreme high temperatures have been reported since the mid-1990s. In the meantime, extreme low-temperature events have decreased. Greenhouse gases have contributed significantly to rising temperatures in China and elsewhere. Global average concentrations of such gases, including carbon dioxide and methane, have steadily increased over time.
 </p>
 
-##### Countries affected due flood in Asia in 2010
-
-<p align='justify'>
-Floods are the most common natural disaster in both developed and developing countries, accounting for roughly 40% of all natural disasters.
-Not surprisingly, countries with extensive coastlines, river systems, and flatland have high percentages of their population at risk. With 1.24 billion people, Southeast Asia alone accounts for more than two-thirds of the global population vulnerable to flooding.
-</p>
+##### Countries affected due flood in Asia
 
 ```{r message=FALSE}
 # Checking the top 5 countries having affected_flood due to disaster:
@@ -536,7 +538,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_flood), y=affected_flo
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("Number of people affected (%)") +
-  labs(title = 'Countries affected by flood in Asia in 2010',
+  labs(title = 'Countries affected by flood in Asia',
        caption = "Number of people is calculated in percentage"
        ) + 
   theme_classic() +
@@ -544,16 +546,15 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_flood), y=affected_flo
   coord_flip()
 p
 ```
-
+<p align='justify'>
+Floods are the most common natural disaster in both developed and developing countries, accounting for roughly 40% of all natural disasters.
+Not surprisingly, countries with extensive coastlines, river systems, and flatland have high percentages of their population at risk. With 1.24 billion people, Southeast Asia alone accounts for more than two-thirds of the global population vulnerable to flooding.
+</p>
 <p align='justify'>
 According to the bar plot, China and India account for 18 million and 16 million people, respectively, with both countries ranking first in terms of the absolute number of people at risk of rising water levels. Pakistan, Bangladesh, and Thailand round out the top five affected countries.
 </p>
 
-#### People died due to climate change disasters in all continents in 2010
-
-<p align='justify'>
-Climate change disasters have also led to the death of millions of people across the world.
-</p>
+#### People died due to climate change disasters in all continents
 
 ```{r message=FALSE}
 # Calculate percentages
@@ -563,14 +564,13 @@ pct <- round(100*continent_data$deaths_all_disasters/sum(continent_data$deaths_a
 pie(continent_data$deaths_all_disasters,
     labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
     col = rainbow(length(continent_data$deaths_all_disasters)), 
-    main = "People died by climate change disasters by continents in 2010")
+    main = "People died by climate change disasters by continents")
 ```
-
 <p align='justify'>
-From the chart, we see that North America has the highest percentage (50%) of people that died from climate change related natural disasters. This is then followed by Asia and then Europe. 
+Climate change disasters have also led to the death of millions of people across the world. From the chart, we see that North America has the highest percentage (51%) of people that died from climate change related natural disasters. This is then followed by Asia and then Europe. 
 </p>
 
-##### People died due climate change disasters in North America in 2010
+##### People died due climate change disasters in North America
 
 ```{r message=FALSE}
 # Checking the top 10 countries having deaths_all_disasters due to disaster:
@@ -591,7 +591,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_all_disasters), y=deaths
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("Number of people died (%)") +
-  labs(title = 'People died by climate change disasters in North America in 2010',
+  labs(title = 'People died by climate change disasters in North America',
        caption = "Number of people died calculated in percentage"
        ) + 
   theme_classic() +
@@ -603,11 +603,7 @@ p
 There have been loss of lives in America especially in Haiti. Natural disasters will always be with us — and some will be worsened by the effects of human-made climate change. Major natural disaster that hits Haiti is earthquakes. Disasters like the earthquake are caused by nature but exacerbated by human inaction. Over 10 million people have died in Haiti from climate related natural disasters. This is then followed by the United States and Peru. 	Most of these deaths happen in Latin America and the Caribbean.
 </p>
 
-##### People died due wildfire in America in 2010
-
-<p align='justify'>
-Although human activities such as lighting campfires and discarding lit cigarettes are primarily to blame for starting the fires, hotter weather makes forests drier and more prone to fire. Rising temperatures evaporate more moisture from the ground, drying out the soil and making vegetation more flammable, which is a key indicator of climate change. Simultaneously, winter snowpacks are melting about a month earlier, resulting in drier forests for longer periods of time.
-</p>
+##### People died due wildfire in America
 
 ```{r message=FALSE}
 # Checking the top 10 countries having deaths_wildfire due to disaster:
@@ -629,7 +625,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wild
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("Number of people died (%)") +
-  labs(title = 'People died due to wildfire in North America in 2010',
+  labs(title = 'People died due to wildfire in North America',
        caption = "Number of people died calculated in percentage"
        ) +
   theme_classic() +
@@ -637,12 +633,14 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wild
   coord_flip()
 p
 ```
-
+<p align='justify'>
+Although human activities such as lighting campfires and discarding lit cigarettes are primarily to blame for starting the fires, hotter weather makes forests drier and more prone to fire. Rising temperatures evaporate more moisture from the ground, drying out the soil and making vegetation more flammable, which is a key indicator of climate change. Simultaneously, winter snowpacks are melting about a month earlier, resulting in drier forests for longer periods of time.
+</p>
 <p align='justify'>
 The United States records the most people who died as a result of wildfires followed by Columbia and Chile.
 </p>
 
-##### People died due flood in America  in 2010
+##### People died due flood in America
 
 ```{r message=FALSE}
 # Checking the top 10 countries having deaths_flood due to disaster:
@@ -664,7 +662,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_flood), y=deaths_flood, 
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("Number of people died (%)") +
-  labs(title = 'People died due to flood in North America in 2010',
+  labs(title = 'People died due to flood in North America',
        caption = "Number of people died calculated in percentage"
        ) +
   theme_classic() +
@@ -676,12 +674,7 @@ p
 There have also been a lot of people who have died from floods in America. Brazil takes the lead with over 5 million who have died from floods over the years. Most countries that have suffered from floods are from Latin America and the Caribbean. 
 </p>
 
-#### People homeless due to all climate change disasters in all continents in 2010
-
-<p align='justify'>
-Earthquakes, tsunamis, floods, and tropical cyclones are the main disasters expected to uproot large numbers of people, with Asian countries, home to 60% of the world's population, bearing the brunt of the damage.
-</p>
-
+#### People homeless due to all climate change disasters in all continents
 
 ```{r message=FALSE}
 # homeless_all_disasters
@@ -693,21 +686,24 @@ pct <- round(100*continent_data$homeless_all_disasters/sum(continent_data$homele
 pie(continent_data$homeless_all_disasters,
     labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
     col = rainbow(length(continent_data$homeless_all_disasters)), 
-    main = "Continents affected by climate change disasters in 2010")
+    main = "Continents affected by climate change disasters")
 ```
+<p align='justify'>
+Earthquakes, tsunamis, floods, and tropical cyclones are the main disasters expected to uproot large numbers of people, with Asian countries, home to 74% of the world's population, bearing the brunt of the damage.
+</p>
 
 <p align='justify'>
 South and Southeast Asia is home to eight of the ten countries with the highest levels of displacement and housing loss. At the top of this list is India with a total of over 13 million people forced to leave their homes over the years. This is followed by China with a whooping 10 million, and Sri Lanka with about 11 million.
 </p>
 
-##### People homeless due to all climate change disasters in Asia in 2010
+##### People homeless due to all climate change disasters in Asia
 
 ```{r message=FALSE}
-# Checking the top 10 countries having deaths_flood due to disaster:
+# Checking the top 5 countries having deaths_flood due to disaster:
 disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c("Asia")))
 sorted = sort(disaster_data_country_asia_homeless$homeless_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top10 countries
+#Subseting Top20 countries by April 25th
 top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
 top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
 top10$Entity <- as.character(top10$Entity) # make the country names as character
@@ -721,7 +717,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_all_disasters), y=home
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("percentage of people homeless (%)") +
-  labs(title = 'People homeless due to climate change disasters in Asia in 2010',
+  labs(title = 'People homeless due to climate change disasters in Asia',
          caption = "Number of people is calculated in percentage",
        ) + 
   theme_classic() +
@@ -730,11 +726,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_all_disasters), y=home
 p
 ```
 
-<p align='justify'>
-The above graph depicts that India , China ns Sri Lanks has the highest number in people who have lost thier house due to climate change disasters.
-</p>
-
-##### People homeless due to flood in Asia in 2010
+##### People homeless due to flood in Asia
 
 ```{r message=FALSE}
 # Checking the top 10 countries having homeless_flood due to disaster:
@@ -755,7 +747,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flo
   geom_bar(stat = "identity") + 
   xlab(" ") +
   ylab("percentage of people homeless (%)") +
-  labs(title = 'People homeless due to flood in Asia in 2010',
+  labs(title = 'People homeless due to flood in Asia',
          caption = "Number of people is calculated in percentage",
        ) + 
   theme_classic() +
@@ -764,9 +756,22 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flo
 p
 ```
 
-<p align='justify'>
-India and Sri Lanka face highest extreme flood. As a result, people have lost thier house and homeless. 
-</p>
+#### total_damages_pct_gdp_all_disasters in all continents
+
+```{r message=FALSE}
+# total_damages_pct_gdp_all_disasters
+
+# Calculate percentages
+pct <- round(100*continent_data$total_damages_pct_gdp_all_disasters/sum(continent_data$total_damages_pct_gdp_all_disasters))
+
+# Pie chart
+pie(continent_data$total_damages_pct_gdp_all_disasters,
+    labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(continent_data$total_damages_pct_gdp_all_disasters)), 
+    main = "total damages pct_gdp_ due to climate change disasters in contients")
+
+```
+
 ### Children Climate Risk Index
 
 <p align='justify'>
@@ -850,7 +855,7 @@ fig
 From the map, we see that several countries are exposed to various climate hazards and environmental shocks. Bangladesh tops the list with a 9.1 ranking. This is followed by India (9.0), Philippines (8.9), Nigeria (8.8), Pakistan (8.7). Most of the extremely high countries in terms of climate environmental shocks come from South Asia and Africa.
 </p>
 
-#### Child Vulnerability
+#### Child_vulnerability
 
 <p align='justify'>
 According to UNICEF, nearly 920 million children (more than one-third of all children worldwide) are exposed to water scarcity; 600 million children (more than one in every four children worldwide) are exposed to vector-borne diseases such as malaria and dengue fever.
@@ -934,11 +939,8 @@ Meanwhile, providing young people with climate education and green skills will a
 <p align='justify'>
 Simultaneously, more investment is needed in water, sanitation, and hygiene systems, health, education, and other critical services for children in order to adapt to climate change and make them more resilient. And immediate action is required to reduce greenhouse gas emissions in order to avoid the worst effects of the climate crisis.
 </p>
-<p align='justify'>
-From an overview from CRRI, many children live in areas that experience multiple, overlapping climate and environmental hazards. Droughts, floods and severe weather, coupled with other environmental stresses, compound one another. These hazards can not only exacerbate each other, but also marginalize pockets of society and increase inequality. They also interact with other social, political and health risks, including COVID-19. Overlapping hazards ultimately make certain parts of the world even more precarious and risky places for children – drastically reducing their future potential. Therefore, taking necessary actions now, will provide a better future for children and a sustainable place to live in.
-</p>
 
-## Dataset details {.appendix}
+## Data Source {.appendix}
 <p align='justify'>
 The data used for this study is extracted from *Our World in Data (OWID)*.
 The data produced by is collected by UN, World Resources Institute , NASA and made available by Our World in Data. 
@@ -979,7 +981,7 @@ Decadal figures are measured as the annual average over the subsequent ten-year 
     - Pillar 2 captures child vulnerability. 
 The data is updated regularly and most metrics are published on an annual basis.
 
-## References {.appendix}
+## References {.unnumbered .appendix}
 
 ::: {}
 James H. Stock, *Climate Change, Climate Policy, and Economic Growth, July 1, 2019* <https://heep.hks.harvard.edu/files/heep/files/dp_85_stock.pdf>
