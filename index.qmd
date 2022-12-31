@@ -944,7 +944,7 @@ Decadal figures are measured as the annual average over the subsequent ten-year 
     - Pillar 2 captures child vulnerability. 
 The data is updated regularly and most metrics are published on an annual basis.
 
-## References {.unnumbered .appendix}
+## References {.appendix}
 
 ::: {}
 James H. Stock, *Climate Change, Climate Policy, and Economic Growth, July 1, 2019* <https://heep.hks.harvard.edu/files/heep/files/dp_85_stock.pdf>
