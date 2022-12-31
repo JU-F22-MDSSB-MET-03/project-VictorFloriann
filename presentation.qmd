@@ -7,44 +7,91 @@ format:
     theme: simple
 ---
 
+## Topics
+::: {.fragment .fade-up}
+- Climate change
+:::
+::: {.fragment .fade-up}
+- Effects of Climate Change - Overall Rise in Temperature
+:::
+::: {.fragment .fade-up}
+- Sea ice level changes in North and South pole
+:::
+::: {.fragment .fade-up}
+- Green House Gases effect
+:::
+::: {.fragment .fade-up}
+- Natural disaster due to climate changes in 2010
+:::
+::: {.fragment .fade-up}
+- Climate risk and CCRI
+:::
+
+
 ## Climate change
 
+::: {.fragment .fade-up}
 - Climate change is a change which is attributed directly or indirectly to human activity 
+:::
+
+::: {.fragment .fade-up}
 - Climate change alters the composition of the global atmosphere and which is in addition to natural climate variability observed over comparative period of time.
+:::
+
+::: {.fragment .fade-up}
+- Humankind is affected, especially children
+:::
 
 ## Effects of Climate Change - Overall Rise in Temperature
 
-![Global surface temperature is rising](img/Global_surface_temperature_rise.png)
+::: columns
+::: {.column width="60%"}
+![](img/Global_surface_temperature_rise.png)
+:::
+
+::: {.column width="40%"}
+- Air temperatures on Earth have been rising 1.1° Celsius (1.9° Fahrenheit) since the Industrial Revolution <br>
+- 2010–2019 decade being the warmest on record
+
+:::
+:::
+
 
 ## Sea ice level changes in North and South pole
 
+::: columns
+::: {.column width="40%"}
+- Changes in Northern Sea ice level is consistently decreasing over the years
+- Southern sea ice level is consistently increasing
+:::
+
+::: {.column width="60%"}
 ![Sea ice level comparison](img/Sea_Ice_Level_Comparision.png)
 
-## The green house effect
+:::
+:::
 
+
+## The green house effect
+- Industrial revolution lead to carbon dioxide emissions which increased rapidly starting from 1950
 ![Carbon Dioxide Increase](img/CO2_Increase.png)
 
 ## Green House gases effect
 
+- CO2, NO2, CH4 and Aerosols are harmfull gases emitted into atmosphere
+- Increase in gas level per year increases climate change disaster
+
 ![Harmfull gases](img/Harmfull_gases.png)
 
-# {auto-animate=true}
-
-::: {style="margin-top: 100px;"}
-Natural disaster due to climate changes
-:::
-
-# {auto-animate=true}
-
-::: {style="margin-top: 150px; font-size: 2em;"}
-Natural disaster due to climate changes
-:::
+## Natural disaster due to climate changes in 2010
 
 
-## Continents affected by climate change disasters
-![climate changes disaster](img/Climate_disaster_Continent.png)
+## Continents affected by climate change disasters in 2010
+- People of Asia have been most affected by climate change related natural disasters
 
-## Countries affected in Asia by extreme temperature and flood
+![Climate change disaster : drought, heatwaves, flood, fog, wildfire, glacial lake, extreme temperature](img/Climate_disaster_Continent.png)
+
+## Countries affected in Asia by extreme temperature and flood in 2010
 :::: {.columns}
 
 ::: {.column width="50%"}
@@ -59,9 +106,18 @@ flood
 
 ::::
 
-## People died due to climate change disasters in all continents
+## People died due to climate change disasters in all continents in 2010
 
+::: columns
+::: {.column width="40%"}
+North America has the highest percentage (50%) of people that died from climate change related natural disasters.
+:::
+
+::: {.column width="60%"}
 ![Continent with people died due to climate change disasters](img/people_died.png)
+
+:::
+:::
 
 ## People died due to wildfire in North America
 
@@ -69,13 +125,13 @@ flood
 
 ### Wildfire
 
-::: {.column width="70%"}
+::: {.column width="50%"}
 ![](img/died_wildfire.png)
 :::
 
 ### Flood
 
-::: {.column width="70%"}
+::: {.column width="50%"}
 ![](img/died_flood.png)
 :::
 
@@ -83,6 +139,12 @@ flood
 ## Climate Risks
 
 ![Climate_Risks.](https://visme.co/blog/wp-content/uploads/climate-risks-1.5-degree-vs-2-degree-global-warming-climate-change-facts-infographic.jpg)
+## CCRI (Children Climate Risk Index)
+
+- CCRI generates new global evidence on the number of children who are currently exposed to climate and environmental hazards, shocks, and stresses through data analysis.
+- A composite index, the CCRI brings together geographical data by analyzing 
+1.) exposure to climate and environmental hazards, shocks and stresses; 
+2.) child vulnerability.
 
 ## Climate Environmental Shocks and Child_vulnerability
 :::: {.columns}
@@ -99,9 +161,29 @@ Child Vulnerability
 :::
 :::: 
 
-## Children Climate Risk Index (CCRI) - Worldwide
+## Children Climate Risk Index (CCRI)
 
+::: columns
+::: {.column width="40%"}
+- Approximately 1 billion children (nearly half of the world’s children) live in countries with extremely high risk
+:::
+
+::: {.column width="60%"}
 ![CCRI](img/CCRI.png)
-## Climate and our future
 
+:::
+:::
 
+# Climate and our future
+
+::: {.fragment .fade-in-then-semi-out}
+- World is entering an unprecedented era as climate change drives unprecedented global environmental, societal, and economic disruption
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+- Policymakers must improve their listening skills and incorporate young people’s perspectives and experiences into climate policies and processes
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+- Providing young people with climate education and green skills
+:::
