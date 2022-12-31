@@ -15,20 +15,17 @@ bibliography: references.bib
 #| label: packages
 #| message: false
 
-# These are the packages used in the report
 # Import required package
 
 library(tidyverse)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
-library(plotly)
 library("RColorBrewer")
 library(skimr)
 library("zoo")
 library(plotly) #world map
 library(ggridges)
-library(forcats)
 options(warn=-1)
 library(reshape2)
 library(gganimate)
@@ -94,7 +91,8 @@ climate_change <- read.csv(file = "data/climate_change.csv",TRUE, sep = ",", str
 cceri_data <- read.csv(file = "data/CC_ERI.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 continent <- read.csv(file = "data/Continents.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
-
+df_south <- read.csv(file = "data/South_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+df_north <- read.csv(file = "data/North_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 #Statistical description
 #dim(climate_change)
 #dim(cceri_data)
@@ -127,7 +125,7 @@ ggplot(climate_change, aes(year, Temp)) +
   geom_smooth(aes(se=FALSE, color = "Avg temp")) +
   labs(title = "Global Temperature is rising",
        subtitle = "Global temperature rise from 1985 to 2022 (°C)",
-       y = "Global Earth Temperature",
+       y = "Global Earth Temperature (°C)",
        color = "Temperature",
        caption = "Annual estimates of mean surface temperature change measured in Degree Celsius for World.",) +
   scale_colour_manual(values = c("orange", "blue"),
@@ -142,13 +140,13 @@ ggplot(climate_change, aes(year, Temp)) +
 ```
 
 <p align='justify'>
-
 Air temperatures on Earth have been rising since the Industrial Revolution. According to an ongoing temperature analysis led by scientists at NASA’s Goddard Institute for Space Studies (GISS), the average global temperature on Earth has increased by at least 1.1° Celsius (1.9° Fahrenheit) since 1880. A one-degree global change is significant because it takes a vast amount of heat to warm all of the oceans, the atmosphere, and the land masses by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age. A five-degree drop was enough to bury a large part of North America under a towering mass of ice 20,000 years ago.
-
+</p>
+<p align='justify'>
 As seen from the line chart above,the global temperature has been increasing since 1990, with the 2010–2019 decade being the warmest on record. The hottest year on record was 2016, and it was followed by 2019 and 2020. In the Arctic, where temperatures have risen at a rate that is roughly twice as fast as the world average, the warming trend has been particularly noticeable.
-
+</p>
+<p align='justify'>
 The Earth's climate has been greatly impacted by this warming trend, which has led to more frequent and severe heatwaves, droughts, and extreme weather events like storms and floods. Additionally, it has aided in the glacier and polar ice cap melting that is raising sea levels.
-
 </p>
 
 #### Global Temperature density
@@ -176,18 +174,17 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
                                   margin = margin(10, 0, 10, 0),
                                   size = 14)) +
   theme(legend.position = c(0.8,0.2)) +
-  xlab("Temperature") + 
+  xlab("Temperature (°C)") + 
   ylab("Year") + 
   theme_classic()
 
 ```
 
 <p align='justify'>
-
 This visualization shows how the distribution of land temperature anomalies has varied over time. As the planet has warmed, we see the peak of the distribution shifting to the right. The distribution of temperatures broadens as well. 
-
+</p>
+<p align='justify'>
 This broadening is most likely due to differential regional warming rather than increased temperature variability at any given location.We can see extreme values since 2000, but after 2009 it has become significant.
-
 </p>
 
 ### Sea level change due to climate change
@@ -196,10 +193,13 @@ This broadening is most likely due to differential regional warming rather than 
 
 ```{r message=FALSE}
 # North pole Sea level
-north_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "N")
-names(north_sea) <- seq(2017, 2022, 1)
-df_north <- ldply(north_sea)
+#north_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "N")
+#names(north_sea) <- seq(2017, 2022, 1)
+#df_north <- ldply(north_sea)
 
+#write.csv(df_north, "/Users/florianndeepika/My Drive/Semester_3/Data Story Telling and #Vis/project-VictorFloriann/data/North_pole_sea_level.csv", row.names=FALSE)
+
+#Plot data
 ggplot(df_north, aes(long, lat, group = group)) +
   geom_polygon(fill = "steelblue") +
   ggtitle("Changes in Sea Ice Level for North pole") +
@@ -208,13 +208,13 @@ ggplot(df_north, aes(long, lat, group = group)) +
 ```
 
 <p align='justify'>
-
 Changes in the amount of sea ice can disrupt normal ocean circulation, thereby leading to changes in global climate.  Even a small increase in temperature can lead to greater warming over time, making the polar regions the most sensitive areas to climate change on Earth.
-
+</p>
+<p align='justify'>
 The Arctic Ocean is covered in layers of frozen seawater. Each winter, this sea ice increases significantly, usually reaching its peak in March. Every summer, it melts just as dramatically, reaching its lowest point in September. Although there has been a natural variation for thousands of years, recent decades have seen a decline in winter and summer trends.
-
+</p>
+<p align='justify'>
 The visualizations show the warmer water rise overtime due to thermal expansion and dissolves floating ice shelves. The Polar Regions are under severe risk because of the enormous sizes of the Antarctic and Greenlandic ice sheets.
-
 </p>
 
 #### South Pole Sea Ice Level
@@ -222,9 +222,14 @@ The visualizations show the warmer water rise overtime due to thermal expansion 
 ```{r message=FALSE}
 #### South Pole Sea Ice Level
 
-south_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "S")
-names(south_sea) <- seq(2017, 2022, 1)
-df_south <- ldply(south_sea)
+#south_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "S")
+#print(south_sea)
+
+#names(south_sea) <- seq(2017, 2022, 1)
+#df_south <- ldply(south_sea)
+#print(df_south)
+
+#write.csv(df_south, "/Users/florianndeepika/My Drive/Semester_3/Data Story Telling and #Vis/project-VictorFloriann/data/South_pole_sea_level.csv", row.names=FALSE)
 
 # Plot data
 ggplot(df_south, aes(long, lat, group = group)) + 
@@ -236,13 +241,13 @@ ggplot(df_south, aes(long, lat, group = group)) +
 ```
 
 <p align='justify'>
-
 While Arctic sea ice is melting at an unprecedented rate, Antarctic sea ice is moving in the opposite direction.
-
+</p>
+<p align='justify'>
 This is due to the fact that icy winds blowing off Antarctica, as well as a powerful ocean current that circles the frozen continent, are far more important factors in the formation and persistence of Antarctic sea ice than temperature changes.
-
+</p>
+<p align='justify'>
 The powerful Southern Ocean Circumpolar Current keeps warmer ocean water from reaching the Antarctic sea ice zone, aiding in the continent's isolation. The winds within that ice zone keep the water extremely cold, allowing the sea ice cover to grow in recent years despite significant global warming.
-
 </p>
 
 #### Sea Ice Level changes comparision
@@ -268,29 +273,29 @@ ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) +
 ```
 
 <p align='justify'>
-
 The Northern Hemisphere experiences the most seasonal change in the amount of ice and snow cover. Put white caps on the top and bottom of the Earth. The bottom cap merely doubles from summer to winter, whereas the top cap grows by a factor of six. The snow cover is to cause for this variation.
-
+</p>
+<p align='justify'>
 Snow cover on land in the Northern Hemisphere ranges from less than 2 million km2 in the summer to 40 to 50 million km2 in the winter. The Southern Hemisphere has little snow cover. Land ice covers approximately 14 million km2 of Antarctica year round, with little variation from summer to winter. The extent of sea ice in the Arctic varies seasonally between 7 and 15 million km2, whereas the extent of sea ice in the Antarctic varies much more - from around 3 million km2 in summer to 18 million km2 in winter. This means that the Antarctic has less multi-year sea ice than the Arctic, where much of the sea ice is older than one year.
-
+</p>
+<p align='justify'>
 From the graph, the changes in Northern Sea ice level is consistently decreasing over the years, whereas the Southern sea ice level is consistently increasing.
-
 </p>
 
 ### Multivariate El Nino Southern Oscillation index by Year
 
 <p align='justify'>
-
 The El Nino Southern Oscillation (ENSO) is the primary predictor of global climate disruptions. It is a naturally occurring anomalous state of tropical Pacific coupled ocean-atmosphere conditions. These can last for several seasons and have serious regional consequences.
-
+</p>
+<p align='justify'>
 The Multivariate ENSO Index (MEI) is used to track ENSO. It consists of six major variables observed over the tropical Pacific. These six variables are as follows: sea-level pressure (P), surface wind zonal (U) and meridional (V) components, sea surface temperature (S), surface air temperature (A), and total cloudiness fraction of the sky (C).
-
 </p>
 
 ```{r message=FALSE}
-climate_change <- climate_change %>% mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1))) 
+climate_change_mei <- climate_change %>% mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1)))
+cl_MEI <- climate_change_mei %>% filter(year <= 2010)
 
-climate_change %>%
+cl_MEI %>%
   arrange(year_month) %>%
   ggplot() + 
   geom_line(aes(year_month, MEI, color = MEI), size = 1) +
@@ -303,40 +308,38 @@ climate_change %>%
   theme_minimal()
 ```
 
-<p align='justify'>
-
-</p>
-
 ### The Green House Effect
 
 <p align='justify'>
-
 The greenhouse effect is the primary cause of climate change. Some gases in the Earth's atmosphere act like greenhouse glass, trapping the sun's heat and preventing it from escaping into space and causing global warming.
-
+</p>
+<p align='justify'>
 Many of these greenhouse gases are naturally occurring, but human activities are increasing their concentrations in the atmosphere, particularly:carbon dioxide (CO2), methane,and nitrous oxide.
-
+</p>
+<p align='justify'>
 Other greenhouse gases are emitted by human activities in smaller quantities. Methane is a more powerful greenhouse gas than CO2, but has a shorter atmospheric lifetime. Nitrous oxide, like CO2, is a long-lived greenhouse gas that accumulates in the atmosphere over decades to centuries. 
-
 </p>
 
 #### Carbon Dioxide level changes
 
 ```{r message=FALSE}
-climate_change_chart <- ggplot(climate_change, aes(x = Year, y = Temp, fill = CO2)) + 
-  xlab("Year") +
-  ylab("Temperature") +
-  theme_minimal(base_size = 14)
+climate_change <- climate_change %>% filter(year <= 2008)
 
-barplot <- climate_change_chart +
-  geom_bar( position = "dodge", stat = "identity",color= "white")
-ggplotly(barplot)
+co2_chart <- ggplot(climate_change, aes(x = Year, y = Temp, fill = CO2)) + 
+  xlab(" ") +
+  ylab("Temperature (°C)") +
+  theme_minimal(base_size = 14)+ 
+  labs(title = "Carbon Dioxide level increase as per temperature - yearwise",
+              caption = "carbon dioxide measurements in parts per million (ppm)")
+
+barplot <- co2_chart +
+  geom_bar( position = "dodge", stat = "identity",color= "white") 
+  ggplotly(barplot)
 
 ```
 
 <p align='justify'>
-
 Since the beginning of the industrial revolution, the carbon dioxide emissions produced by industrial operations and the global burning of fossil fuels have dramatically increased at a constant rapid rate. Emissions of carbon dioxide (CO2) increased rapidly starting in the 1950s and peaked in 2000 at 25.23 billion tons. Between 2000 and 2010, emissions increased by 32 percent.
-
 </p>
 
 #### Vartations of CO_2, N2O, CH4 and MEI by year
@@ -344,53 +347,64 @@ Since the beginning of the industrial revolution, the carbon dioxide emissions p
 ```{r message=FALSE}
 climate_change_ymd <- climate_change %>%
   mutate(year_month = ymd(paste(climate_change$Year, climate_change$Month, truncated = 1))) 
+climate_change_ymd <- climate_change_ymd %>% filter(year <= 2010)
 
-scat_plot1 <-  ggplot(climate_change_ymd, aes(year_month, CO2))+geom_line(colour="blueviolet")+geom_smooth(method = "lm")+ggtitle("Carbon Dioxide") + theme_minimal(base_size = 14)
-scat_plot2<-  ggplot(climate_change_ymd, aes(year_month, N2O))+geom_line()+geom_smooth(method = "lm")+ggtitle("Nitrous Oxide") + theme_minimal(base_size = 14)
-scat_plot3<-  ggplot(climate_change_ymd, aes(year_month, CH4))+geom_line(colour="springgreen4")+geom_smooth(method = "lm")+ggtitle("Methane") + theme_minimal(base_size = 14)
-scat_plot4 <-  ggplot(climate_change_ymd, aes(year_month, MEI))+geom_line(colour="mediumorchid4")+ggtitle("MEI") + theme_minimal(base_size = 14)
+scat_plot1 <-  ggplot(climate_change_ymd, aes(year_month, CO2))+geom_line(colour="blueviolet")+geom_smooth(method = "lm")+ggtitle("Carbon Dioxide") + theme_minimal(base_size = 10) + xlab(" ")
+
+scat_plot2<-  ggplot(climate_change_ymd, aes(year_month, N2O))+geom_line()+geom_smooth(method = "lm")+ggtitle("Nitrous Oxide") + theme_minimal(base_size = 10) + xlab(" ")
+
+scat_plot3<-  ggplot(climate_change_ymd, aes(year_month, CH4))+geom_line(colour="springgreen4")+geom_smooth(method = "lm")+ggtitle("Methane") + theme_minimal(base_size = 10) + xlab(" ")
+
+scat_plot4 <-  ggplot(climate_change_ymd, aes(year_month, Aerosols))+geom_line(colour="mediumorchid4")+ggtitle("Aerosols") + theme_minimal(base_size = 10) + xlab(" ")
+
 grapgh_arrange<-ggarrange(scat_plot1, scat_plot2, scat_plot3, scat_plot4 + rremove("x.text"), 
-          labels = c("A", "B", "C", "D"),
+          labels = c("1", "2", "3", "4"),
           ncol = 2, nrow = 2)
+
 annotate_figure(grapgh_arrange,
-                top = text_grob("Vartations of CO_2, N2O, CH4 and MEI by year", color = "red", face = "bold", size = 14)
+                top = text_grob("Vartations of CO_2, N2O, CH4 and Aerosols by year", face = "bold", size = 12)
 )
 
 ```
 
 CO2:
 <p align='justify'>
-
 This line graph depicts the monthly average carbon dioxide measurements in parts per million (ppm) since 1990. Summertime growth and winter decay of Northern Hemisphere vegetation drive the seasonal cycle of highs and lows (small peaks and valleys). Human activities are driving the long-term trend of rising CO2 levels.
-
+</p>
+<p align='justify'>
 From the line graph, the CO2 emissions has been on a rapid increase from 1990 at about 355ppm to about 387ppm in 2010. The red line signifies the global average co2 emissions concentration. An increase in greenhouse gas concentrations in the atmosphere causes positive climate forcing, or warming. 
-
+</p>
+<p align='justify'>
 According to the Global Carbon Update 2021, annual emissions from burning fossil fuels have increased every decade since the mid-twentieth century, from an average of 3 billion tons of carbon (11 billion tons of carbon dioxide) per year in the 1960s to 9.5 billion tons of carbon (35 billion tons of carbon dioxide) per year in the 2010s. The total warming effect of greenhouse gases added to the Earth's atmosphere by humans increased by 45 percent between 1990 and 2019. The warming effect caused by carbon dioxide alone increased by 36%.
-
 </p>
 
 Methane:
-
 <p align='justify'>
 This graph shows the increase of methane gas over the years. There was a whopping 145ppb increase between 1980 and 2000. From year 2000,the rate of methane gas slowed down and become relatively constant between 2005 and 2010.
 </p>
 
 Nitrous Oxide:
-
 <p align='justify'>
 Nitrous oxide is a greenhouse gas that is over 300 times as potent as CO2 and also destroys the ozone layer in the stratosphere. According to a new study published in Nature, nitrous oxide emissions from human activities have increased by 30% since 1980, which is a faster increase than experts had initially predicted.The graph shows a rapid growth of nitrous oxide emissions since 1980 till 2010.
+</p>
+
+Aerosols: 
+<p align='justify'>
+Tiny liquid and solid particles suspended in atmosphere can cause climate change. Atmospheric aerosols influence the climate directly by scattering and absorbing incoming solar radiation and indirectly by acting as cloud condensation nuclei and/or ice nuclei.
 </p>
 
 ### Natural disaster due to climate changes
 
 <p align='justify'>
 Climate change can increase disaster risk in a variety of ways - by altering the frequency and intensity of hazard events, affecting vulnerability to hazards, and changing exposure patterns.
-
+</p>
+<p align='justify'>
 The next visualizations would show how climate change has contributed to several natural disasters and its effects on people.
 </p>
 
 ```{r message=FALSE}
 ##Pre-processing
+
 #Selecting only required columns from Natural disaster data for further analysis and visualization
 disaster_data <- natural_disaster_data %>% 
                   select(Entity,Year, affected_all_disasters, affected_temperature, affected_flood, affected_wildfire, 
@@ -398,7 +412,7 @@ disaster_data <- natural_disaster_data %>%
                          homeless_all_disasters, homeless_temperature, homeless_flood, homeless_wildfire,
                          injured_all_disasters, injured_temperature, injured_flood, injured_wildfire,
                          total_affected_all_disasters, total_affected_temperature, total_affected_flood, total_affected_wildfire,total_damages_pct_gdp_all_disasters, total_damages_pct_gdp_temperature, total_damages_pct_gdp_flood, total_damages_pct_gdp_wildfire) %>%
-                  group_by(Entity) %>% filter(Year == max(Year)) %>% # Take the most recent date per country
+                  group_by(Entity) %>% filter(Year == max(Year)) %>% # Taking the most recent date per country
                   group_by() %>% #removing groupby
                   drop_na() 
 
@@ -419,243 +433,271 @@ disaster_data_country <- disaster_data_country %>%
                         drop_na() 
 ```
 
-#### People affected due to all disaster in all continents
+#### Countries affected due to all disaster in all continents
 
 ```{r message=FALSE}
-# affected_all_disasters
-continent_data$affected_all_disasters= 100*(continent_data$affected_all_disasters/sum(continent_data$affected_all_disasters))
+# Calculate percentages
+pct_all_disas <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
+pct <- round(100*continent_data$affected_all_disasters/sum(continent_data$affected_all_disasters))
 
-ggplot(data=continent_data, aes(x=Entity, y=affected_all_disasters)) +
-    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
-    coord_flip() +
-    xlab("C") + 
-    ylab("percentage of People affected") +
-    labs(title = 'People affected by climate change disasters',
-         subtitle = "Disasters: drought, heatwaves, flood, fog, wildfire, glacial lake",
-         caption = "Number of people is calculated in percentage",
-       ) + 
-    labs(x = "") +
-    theme_classic()
+# Pie chart
+pie(pct_all_disas$affected_all_disasters,
+    labels = paste(pct_all_disas$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(pct_all_disas$affected_all_disasters)), 
+    main = "Continents affected by climate change disasters")
 ```
+<p align='justify'>
+Climate change has contributed to the occurrence of natural disasters. Some of these disasters include drought, heatwaves, flood, fog, wildfire, glacial lake. These natural disasters have affected people all over the world. Natural disasters are becoming more common around the world. Floods and storms, as well as droughts and heat waves, are causing increasingly severe natural disasters, which are defined as causing at least 100 deaths or affecting the basic survival needs of at least 1,000 people. In recent decades, the Asia-Pacific region has seen some of the most devastating natural disasters, with dire consequences for human welfare. At the same time, the region's climate has been changing. Temperatures have been higher on average, but they have also been more variable and extreme.
+</p>
+<p align='justify'>
+From the chart, the people of Asia have been most affected by climate change related natural disasters. About 80% of people affected come from Asia which is significantly higher than other continents.  Next is Africa with about 10% and North America with 8% of people affected.
+</p>
 
-##### People affected due heatwaves in Asia
+##### Countries affected due extreme temperature in Asia
 
 ```{r message=FALSE}
-# Checking the top 5 countries having affected_temperature due to disaster:
-disaster_data_country_asia <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia")))
+# Checking the top 10 countries having extreme temperature due to disaster:
+disaster_data_country_asia <- filter(disaster_data_country, (region %in% c("Asia")))
 sorted = sort(disaster_data_country_asia$affected_temperature,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country_asia[sorted[1:10],]
-top5 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
+#Subseting Top10 countries
+top10 <- disaster_data_country_asia[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data_country_asia,top5,by="Entity") #join two tables together 
+top10_data <- dplyr::inner_join(disaster_data_country_asia,top10,by="Entity") #join two tables together 
 
 #Barplot
-top5_data$affected_temperature <- log (top5_data$affected_temperature)
-p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=sub.region)) + 
+top10_data$affected_temperature <- log (top10_data$affected_temperature)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_temperature), y=affected_temperature, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
+  ylab("Number of people affected (%)") +
+  labs(title = 'Countries affected by extreme temperature in Asia',
+       caption = "Number of people is calculated in percentage"
        ) + 
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
+<p align='justify'>
+Temperatures are rising two times faster in Asia than the global average, which is associated with the increased frequency and severity of weather-related natural disasters. Asia had its warmest year on record in 2020, with the mean temperature 1.39 °C above the 1981–2010 average. Extreme weather – record-breaking heat waves, severe drought, and deadly rainfall – have battered China. 
+</p>
+<p align='justify'>
+From the bar plot, China has had over 16 million people affected as a result of rising temperature. It is the most affected country in Asia with increased heat waves. This is closely followed by Mongolia with 12 million and Thailand with about 11 million people affected.
+</p>
+<p align='justify'>
+In recent years, China has reported more extreme weather events, such as high temperatures and heavy precipitation, indicating that the risk of climate change is increasing. Between 1961 and 2020, extreme heavy precipitation events increased, while significantly more extreme high temperatures have been reported since the mid-1990s. In the meantime, extreme low-temperature events have decreased. Greenhouse gases have contributed significantly to rising temperatures in China and elsewhere. Global average concentrations of such gases, including carbon dioxide and methane, have steadily increased over time.
+</p>
 
-##### People affected due flood in Asia
+##### Countries affected due flood in Asia
 
 ```{r message=FALSE}
 # Checking the top 5 countries having affected_flood due to disaster:
-disaster_data_country_asia <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia")))
+disaster_data_country_asia <- filter(disaster_data_country, (region %in% c("Asia")))
 sorted = sort(disaster_data_country_asia$affected_flood,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country_asia[sorted[1:10],]
-top5 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
+#Subseting Top10 countries 
+top10 <- disaster_data_country_asia[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_asia$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data_country_asia,top5,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+top10_data <- dplyr::inner_join(disaster_data_country_asia,top10,by="Entity") #join two tables together 
 
 #Barplot
-top5_data$affected_flood <- log (top5_data$affected_flood)
-p <- ggplot(top5_data, aes(x = reorder(Entity, +affected_flood), y=affected_flood, fill=sub.region)) + 
+top10_data$affected_flood <- log (top10_data$affected_flood)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +affected_flood), y=affected_flood, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
+  ylab("Number of people affected (%)") +
+  labs(title = 'Countries affected by flood in Asia',
+       caption = "Number of people is calculated in percentage"
        ) + 
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
+<p align='justify'>
+Floods are the most common natural disaster in both developed and developing countries, accounting for roughly 40% of all natural disasters.
+Not surprisingly, countries with extensive coastlines, river systems, and flatland have high percentages of their population at risk. With 1.24 billion people, Southeast Asia alone accounts for more than two-thirds of the global population vulnerable to flooding.
+</p>
+<p align='justify'>
+According to the bar plot, China and India account for 18 million and 16 million people, respectively, with both countries ranking first in terms of the absolute number of people at risk of rising water levels. Pakistan, Bangladesh, and Thailand round out the top five affected countries.
+</p>
 
 #### People died due to climate change disasters in all continents
 
 ```{r message=FALSE}
-# No legend, since the information is redundant
-# Add y axis units - TBD
-#continent_data$affected_temperature <- log(continent_data$affected_temperature) 
+# Calculate percentages
+pct <- round(100*continent_data$deaths_all_disasters/sum(continent_data$deaths_all_disasters))
 
-continent_data$deaths_all_disasters= 100*(continent_data$deaths_all_disasters/sum(continent_data$deaths_all_disasters))
-
-ggplot(data=continent_data, aes(x=Entity, y=deaths_all_disasters)) +
-    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
-    coord_flip() +
-    xlab("C") + 
-    ylab("percentage of People died") +
-    labs(title = 'People affected by climate change disasters',
-         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people is calculated in percentage",
-       ) + 
-    labs(x = "") +
-    theme_classic()
-    #guides(fill=FALSE)
-
+# Pie chart
+pie(continent_data$deaths_all_disasters,
+    labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(continent_data$deaths_all_disasters)), 
+    main = "People died by climate change disasters by continents")
 ```
+<p align='justify'>
+Climate change disasters have also led to the death of millions of people across the world. From the chart, we see that North America has the highest percentage (50%) of people that died from climate change related natural disasters. This is then followed by Asia and then Europe. 
+</p>
 
-##### People died due climate change disasters in America
+##### People died due climate change disasters in North America
 
 ```{r message=FALSE}
-# Checking the top 5 countries having deaths_all_disasters due to disaster:
-disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
-                                                              "Americas")))
+# Checking the top 10 countries having deaths_all_disasters due to disaster:
+disaster_data_country_americas <- filter(disaster_data_country, (region %in% c("Americas")))
 sorted = sort(disaster_data_country_americas$deaths_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
-top5 <- disaster_data_country_americas[sorted[1:10],]
-top5 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
-top5$Entity <- as.character(top5$Entity) # make the country names as character
+#Subseting Top10 countries
+top10 <- disaster_data_country_americas[sorted[1:10],]
+top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
+top10$Entity <- as.character(top10$Entity) # make the country names as character
+
 #To plot:
-top5_data <- dplyr::inner_join(disaster_data_country_americas,top5,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
+top10_data <- dplyr::inner_join(disaster_data_country_americas,top10,by="Entity") #join two tables together 
 
 #Barplot
-top5_data$deaths_all_disasters <- log (top5_data$deaths_all_disasters)
-p <- ggplot(top5_data, aes(x = reorder(Entity, +deaths_all_disasters), y=deaths_all_disasters, fill=sub.region)) + 
+top10_data$deaths_all_disasters <- log (top10_data$deaths_all_disasters)
+p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_all_disasters), y=deaths_all_disasters, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
+  ylab("Number of people died (%)") +
+  labs(title = 'People died by climate change disasters in North America',
+       caption = "Number of people died calculated in percentage"
        ) + 
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
+<p align='justify'>
+There have been loss of lives in America especially in Haiti. Natural disasters will always be with us — and some will be worsened by the effects of human-made climate change. Major natural disaster that hits Haiti is earthquakes. Disasters like the earthquake are caused by nature but exacerbated by human inaction. Over 10 million people have died in Haiti from climate related natural disasters. This is then followed by the United States and Peru. 	Most of these deaths happen in Latin America and the Caribbean.
+</p>
 
 ##### People died due wildfire in America
 
 ```{r message=FALSE}
-# Checking the top 5 countries having deaths_wildfire due to disaster:
+# Checking the top 10 countries having deaths_wildfire due to disaster:
 disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
                                                               "Americas")))
 sorted = sort(disaster_data_country_americas$deaths_wildfire,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
+#Subseting Top10 countries
 top10 <- disaster_data_country_americas[sorted[1:3],]
-top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:3]]) # construct a dataframe based on the top 5 countries
+top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:3]]) # construct a dataframe based on the top 10 countries
 top10$Entity <- as.character(top10$Entity) # make the country names as character
+
 #To plot:
 top10_data <- dplyr::inner_join(disaster_data_country_americas,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
 top10_data$deaths_wildfire <- log (top10_data$deaths_wildfire)
 p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_wildfire), y=deaths_wildfire, fill=sub.region)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
+  ylab("Number of people died (%)") +
+  labs(title = 'People died due to wildfire in North America',
+       caption = "Number of people died calculated in percentage"
+       ) +
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
+<p align='justify'>
+Although human activities such as lighting campfires and discarding lit cigarettes are primarily to blame for starting the fires, hotter weather makes forests drier and more prone to fire. Rising temperatures evaporate more moisture from the ground, drying out the soil and making vegetation more flammable, which is a key indicator of climate change. Simultaneously, winter snowpacks are melting about a month earlier, resulting in drier forests for longer periods of time.
+</p>
+<p align='justify'>
+The United States records the most people who died as a result of wildfires followed by Columbia and Chile.
+</p>
 
 ##### People died due flood in America
 
 ```{r message=FALSE}
-# Checking the top 5 countries having deaths_flood due to disaster:
+# Checking the top 10 countries having deaths_flood due to disaster:
 disaster_data_country_americas <- filter(disaster_data_country, (region %in% c(
                                                               "Americas")))
 sorted = sort(disaster_data_country_americas$deaths_flood,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
+#Subseting Top10 countries
 top10 <- disaster_data_country_americas[sorted[1:10],]
 top10 <- data.frame(Entity=disaster_data_country_americas$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
 top10$Entity <- as.character(top10$Entity) # make the country names as character
+
 #To plot:
 top10_data <- dplyr::inner_join(disaster_data_country_americas,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
 top10_data$deaths_flood <- log (top10_data$deaths_flood)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_flood), y=deaths_flood, fill=sub.region)) + 
+p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_flood), y=deaths_flood, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
+  ylab("Number of people died (%)") +
+  labs(title = 'People died due to flood in North America',
+       caption = "Number of people died calculated in percentage"
+       ) +
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
+<p align='justify'>
+There have also been a lot of people who have died from floods in America. Brazil takes the lead with over 5 million who have died from floods over the years. Most countries that have suffered from floods are from Latin America and the Caribbean. 
+</p>
 
 #### People homeless due to all climate change disasters in all continents
 
 ```{r message=FALSE}
 # homeless_all_disasters
 
-continent_data$homeless_all_disasters= 100*(continent_data$homeless_all_disasters/sum(continent_data$homeless_all_disasters))
+# Calculate percentages
+pct_homeless <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
+pct <- round(100*continent_data$homeless_all_disasters/sum(continent_data$homeless_all_disasters))
 
-ggplot(data=continent_data, aes(x=Entity, y=homeless_all_disasters)) +
-    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
-    coord_flip() +
-    ylab("percentage of People homeless") +
-    labs(title = 'People death due to climate change disasters',
-         subtitle = "Disasters: drought, heatwaves, flood, fog, wildfire, glacial lake",
-         caption = "Number of people homeless is calculated in perentage",
-       ) + 
-    labs(x = "") +
-    theme_classic()
+# Pie chart
+pie(pct_homeless$homeless_all_disasters,
+    labels = paste(pct_homeless$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(pct_homeless$homeless_all_disasters)), 
+    main = "Continents affected by climate change disasters")
+
 ```
+<p align='justify'>
+Earthquakes, tsunamis, floods, and tropical cyclones are the main disasters expected to uproot large numbers of people, with Asian countries, home to 60% of the world's population, bearing the brunt of the damage.
+</p>
+
+<p align='justify'>
+South and Southeast Asia is home to eight of the ten countries with the highest levels of displacement and housing loss. At the top of this list is India with a total of over 13 million people forced to leave their homes over the years. This is followed by China with a whooping 10 million, and Sri Lanka with about 11 million.
+</p>
 
 ##### People homeless due to all climate change disasters in Asia
 
 ```{r message=FALSE}
 # Checking the top 5 countries having deaths_flood due to disaster:
-disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia")))
+disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c("Asia")))
 sorted = sort(disaster_data_country_asia_homeless$homeless_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
 
 #Subseting Top20 countries by April 25th
 top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
-top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
 top10$Entity <- as.character(top10$Entity) # make the country names as character
+
 #To plot:
 top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
 top10_data$homeless_all_disasters <- log (top10_data$homeless_all_disasters)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_all_disasters), y=homeless_all_disasters, fill=sub.region)) + 
+p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_all_disasters), y=homeless_all_disasters, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
+  ylab("percentage of people homeless (%)") +
+  labs(title = 'People homeless due to climate change disasters in Asia',
+         caption = "Number of people is calculated in percentage",
        ) + 
   theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
@@ -663,138 +705,29 @@ p
 ##### People homeless due to flood in Asia
 
 ```{r message=FALSE}
-# Checking the top 5 countries having homeless_flood due to disaster:
+# Checking the top 10 countries having homeless_flood due to disaster:
 disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
                                                               "Asia")))
 sorted = sort(disaster_data_country_asia_homeless$homeless_flood,decreasing = TRUE,index.return=TRUE)$ix
 
-#Subseting Top20 countries by April 25th
+#Subseting Top10 countries
 top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
-top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
+top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
 top10$Entity <- as.character(top10$Entity) # make the country names as character
 #To plot:
 top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
 
 #Barplot
 top10_data$homeless_flood <- log (top10_data$homeless_flood)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flood, fill=sub.region)) + 
+p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flood, fill=Entity)) + 
   geom_bar(stat = "identity") + 
   xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
+  ylab("percentage of people homeless (%)") +
+  labs(title = 'People homeless due to flood in Asia',
+         caption = "Number of people is calculated in percentage",
        ) + 
   theme_classic() +
-  coord_flip()
-p
-```
-
-#### People injured due to all climate change disasters in all continents
-
-```{r message=FALSE}
-# injured_all_disasters
-
-continent_data$injured_all_disasters= 100*(continent_data$injured_all_disasters/sum(continent_data$injured_all_disasters))
-
-ggplot(data=continent_data, aes(x=Entity, y=injured_all_disasters)) +
-    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
-    coord_flip() +
-    ylab("percentage of total damages pct gdp all disaster") +
-    labs(title = 'People death due to climate change disasters',
-         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people is calculated in perentage",
-       ) + 
-    labs(x = "") +
-    theme_classic()
-```
-
-##### People injured  due to all climate change disasters in Asia
-
-```{r message=FALSE}
-# Checking the top 5 countries having injured_all_disasters due to disaster:
-disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia","North America")))
-sorted = sort(disaster_data_country_asia_injured$injured_all_disasters,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top10 <- disaster_data_country_asia_injured[sorted[1:10],]
-top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
-top10$Entity <- as.character(top10$Entity) # make the country names as character
-#To plot:
-top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top10_data$injured_all_disasters <- log (top10_data$injured_all_disasters)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_all_disasters), y=injured_all_disasters, fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
-  coord_flip()
-p
-```
-
-##### People injured  due to heatwaves in Asia
-
-```{r message=FALSE}
-# Checking the top 5 countries having injured_temperature due to disaster:
-disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia","North America")))
-sorted = sort(disaster_data_country_asia_injured$injured_temperature,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top10 <- disaster_data_country_asia_injured[sorted[1:7],]
-top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:7]]) # construct a dataframe based on the top 5 countries
-top10$Entity <- as.character(top10$Entity) # make the country names as character
-#To plot:
-top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top10_data$injured_temperature <- log (top10_data$injured_temperature)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_temperature), y=injured_temperature, fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
-  coord_flip()
-p
-```
-
-##### People injured  due to flood in Asia
-
-```{r message=FALSE}
-# Checking the top 5 countries having injured_flood due to disaster:
-disaster_data_country_asia_injured <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia")))
-sorted = sort(disaster_data_country_asia_injured$injured_flood,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top20 countries by April 25th
-top10 <- disaster_data_country_asia_injured[sorted[1:10],]
-top10 <- data.frame(Entity=disaster_data_country_asia_injured$Entity[sorted[1:10]]) # construct a dataframe based on the top 5 countries
-top10$Entity <- as.character(top10$Entity) # make the country names as character
-#To plot:
-top10_data <- dplyr::inner_join(disaster_data_country_asia_injured,top10,by="Entity") #join two tables together 
-#length(unique(top5_data$Entity)) # Make sure the unique length is 5
-
-#Barplot
-top10_data$injured_flood <- log (top10_data$injured_flood)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +injured_flood), y=injured_flood, fill=sub.region)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("Number of people affected") +
-  labs(title = 'Country affected by temperature',
-       subtitle = "Number of people affected calculated in million"
-       ) + 
-  theme_classic() +
+  theme(legend.position="none") +
   coord_flip()
 p
 ```
@@ -804,32 +737,29 @@ p
 ```{r message=FALSE}
 # total_damages_pct_gdp_all_disasters
 
-continent_data$total_damages_pct_gdp_all_disasters= 100*(continent_data$total_damages_pct_gdp_all_disasters/sum(continent_data$total_damages_pct_gdp_all_disasters))
+# Calculate percentages
+pct <- round(100*continent_data$total_damages_pct_gdp_all_disasters/sum(continent_data$total_damages_pct_gdp_all_disasters))
 
-ggplot(data=continent_data, aes(x=Entity, y=total_damages_pct_gdp_all_disasters)) +
-    geom_bar(colour="black", fill="#DD8888", width=.8, stat="identity",position=position_dodge()) +
-    coord_flip() +
-    ylab("percentage of total damages pct gdp all disaster") +
-    labs(title = 'People death due to climate change disasters',
-         subtitle = "Disasters: drought, temperature, flood, fog, wildfire, glacial lake",
-         caption = "Number of people is calculated in perentage",
-       ) + 
-    labs(x = "") +
-    theme_classic()
+# Pie chart
+pie(continent_data$total_damages_pct_gdp_all_disasters,
+    labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(continent_data$total_damages_pct_gdp_all_disasters)), 
+    main = "total damages pct_gdp_ due to climate change disasters in contients")
+
 ```
 
 ### Children Climate Risk Index
 
+<p align='justify'>
 The CCRI generates new global evidence on the number of children who are currently exposed to climate and environmental hazards, shocks, and stresses through data analysis. Furthermore, the CCRI helps to understand and quantify the risks of climate and environmental shocks or stresses that lead to the erosion of development progress, the deepening of deprivation, and/or humanitarian situations affecting children or vulnerable households and groups. A composite index, the CCRI brings together geographical data by analyzing 1.) exposure to climate and environmental hazards, shocks and stresses; and 2.) child vulnerability.
-
+</p>
+<p align='justify'>
 The CCRI index looks to identify which nations or regions are at risk of humanitarian crises affecting children and child deprivation deepening as a result of their vulnerability to climate and environmental shocks or pressures. It also helps to recognize the underlying factors that may contribute to these risks.
+</p>
 
 ```{r message=FALSE}
 ##Pre-processing
 #Selecting only required columns from CC_ERI data for further analysis and visualization
-
-
-
 cceri_data <- cceri_data %>% 
               select(REF_AREA,Geographic.area,Indicator,Value) %>%
               drop_na()
@@ -857,6 +787,19 @@ colnames(cc_eri_data_new)[25] <- "Vector_borne_diseases"
 
 #### Climate Environmental Shocks
 
+<p align='justify'>
+Estimated 330 million children (1 in 7 children globally) are exposed to at least five major climate and environmental hazards, shocks and stresses.
+</p>
+<p align='justify'>
+For a variety of reasons, children are more vulnerable to climate and environmental shocks than adults:
+</p>
+<p align='justify'>
+• They are physically weaker and less capable of withstanding and surviving shocks such as floods, droughts, severe weather, and heatwaves.
+• They are more physiologically vulnerable. Toxic substances, such as lead and other forms of pollution, have a greater impact on children than adults, even at lower doses of exposure.
+• They are more likely than adults to die from diseases that are likely to be exacerbated by climate change, such as malaria and dengue.
+• They have the rest of their lives ahead of them - any deprivation caused by climate and environmental degradation at a young age can result in a lifetime of missed opportunities.
+</p>
+
 ```{r message=FALSE}
 
 cc_eri_data_new$Climate_environmental_shocks <- as.numeric(as.character(cc_eri_data_new$Climate_environmental_shocks))
@@ -880,10 +823,19 @@ fig <- fig %>% layout(
   title = 'Climate Environmental Shocks - Worldwide',
   geo = g
 )
+
 fig
 ```
 
+<p align='justify'>
+From the map, we see that several countries are exposed to various climate hazards and environmental shocks. Bangladesh tops the list with a 9.1 ranking. This is followed by India (9.0), Philippines (8.9), Nigeria (8.8), Pakistan (8.7). Most of the extremely high countries in terms of climate environmental shocks come from South Asia and Africa.
+</p>
+
 #### Child_vulnerability
+
+<p align='justify'>
+According to UNICEF, nearly 920 million children (more than one-third of all children worldwide) are exposed to water scarcity; 600 million children (more than one in every four children worldwide) are exposed to vector-borne diseases such as malaria and dengue fever.
+</p>
 
 ```{r message=FALSE}
 
@@ -909,6 +861,10 @@ fig <- fig %>% layout(
 )
 fig
 ```
+
+<p align='justify'>
+From the map, the most vulnerable children to climate related diseases predominantly come from Africa with the Central African Republic topping the list with a 9.8 score. Then followed by Guinea Bisau (9.5), Chad(9.4), Somalia (9.3).
+</p>
 
 #### Children Climate Risk Index (CCRI) - Worldwide
 
@@ -936,9 +892,28 @@ fig <- fig %>% layout(
 fig
 ```
 
+<p align='justify'>
+Approximately 1 billion children (nearly half of the world's children) live in countries with extremely high risk.
+</p>
+<p align='justify'>
+Based on the CCRI map, children in the Central African Republic (8.7), Chad (8.5), Nigeria (8.5) , Guinea (8.4), and Guinea-Bissau (8.4) are most at risk, while children in New Zealand (1.6), Luxembourg (1.5), and Iceland (1.0) appear to be the safest. The most risky countries based on the CCRI are located in Africa. The safest countries happen to have small population numbers in common. New Zealand (5.1 million),  Luxembourg (645,000) and Iceland (376,000).
+</p>
+<p align='justify'>
+It is also worthy to note that the 33 ‘extremely high-risk’ countries based on CCRI collectively emit just 9% of global CO2 emissions. But the 10 highest emitting countries create nearly 70% of global emissions.
+</p>
+
 ## Conclusion
 <p align='justify'>
-The world is entering unprecedented era as climate change drives unprecedented global environmental, societal, and economic disruption. Exploring and analyzing the greenhouse gas emitters due to industrial revolution, while taking proper measures we can protect and support the society, especially the children.
+The world is entering an unprecedented era as climate change drives unprecedented global environmental, societal, and economic disruption. Exploring and analysing the greenhouse gas emitters due to the industrial revolution, while taking proper measures we can protect and support the society, especially the children.
+</p>
+<p align='justify'>
+To address this crisis, policymakers must improve their listening skills and incorporate young people's perspectives and experiences into climate policies and processes. This includes involving them in all climate-related decision-making processes, including international meetings such as the COP26 UN climate summit.
+</p>
+<p align='justify'>
+Meanwhile, providing young people with climate education and green skills will assist them in adapting to and preparing for climate change.
+</p>
+<p align='justify'>
+Simultaneously, more investment is needed in water, sanitation, and hygiene systems, health, education, and other critical services for children in order to adapt to climate change and make them more resilient. And immediate action is required to reduce greenhouse gas emissions in order to avoid the worst effects of the climate crisis.
 </p>
 
 ## Data Source {.appendix}
