@@ -3,8 +3,8 @@ title: "Global climate heading in a Wrong Direction: Mechanism behind the occurr
 author: "Victor & Floriann"
 format: 
   html:
-    toc: true                   # This creates the table of context menu
-    toc-depth: 2                # Increase if you want to have subsections in the table of context menu
+    toc: true 
+    toc-depth: 2
     number-sections: true
     code-fold: true
     code-tools: true
@@ -51,28 +51,18 @@ Detailed project report
 
 ## Executive Summary
 <p align='justify'>
-
 The Earth's climate is changing in unprecedented ways, according to scientists. Since the Industrial Revolution, the global average temperature has risen by one degree Celsius. Although this may not appear to be much, it has already had a significant impact on how our planet functions. This data visualization report assists us in answering three major questions: the causes and effects of climate change, the trend of natural disasters caused by global warming, and the climatic change in relation to Children Climate Risk Index (CCRI) data.
 </p>
-
 <p align='justify'>
-
 Natural disasters have been exacerbated by climate change. Drought, heatwaves, flood, fog, wildfire, and glacial lake are some of these disasters. People all over the world have been affected by these natural disasters. According to the analysis, Asia is the most affected by most climate-related disasters, with China being the most affected by extreme temperature and flooding. Furthermore, North America has the highest number of deaths from climate-related natural disasters, with Haiti having the highest number of deaths on the continent. In addition, Southern Asia has the highest number of people who have become homeless as a result of these natural disasters, with India being the most affected. Surprisingly, the continent with the greatest impact (30%) is North America.
 </p>
-
-
 <p align='justify'>
 The CCRI index seeks to identify which countries or regions are at risk of humanitarian crises affecting children and child deprivation worsening as a result of their vulnerability to climate and environmental shocks or pressures. According to the CCRI map, children in the Central African Republic (8.7), Chad (8.5), Nigeria (8.5), Guinea (8.4), and Guinea-Bissau (8.4) are the most vulnerable to climate change effects, while children in New Zealand (1.6), Luxembourg (1.5), and Iceland (1.0) appear to be the safest.
 </p>
-
-
 <p align='justify'>
-
 As a result of enormous global environmental, sociological, and economic disruption brought on by climate change, the world is approaching an unprecedented period. By investigating and analyzing the sources of greenhouse gas emissions brought on by the industrial revolution, we can help and protect society in general and children in particular.
 </p>
-
 <p align='justify'>
-
 Policymakers must develop better listening skills and incorporate the viewpoints and experiences of young people into climate policies and processes in order to confront this catastrophe.
 </p>
 
@@ -110,6 +100,8 @@ Data source will be accessed by from Github API with *R* language. There are 3 d
     Link : *<https://data.giss.nasa.gov/gistemp/ https://data.giss.nasa.gov/gistemp/tabledata_v4/T_AIRS/GLB.Ts+dSST.csv>* <br>
 4. Children’s Climate and Environment Risk Index<br>
     Link : *<https://sdmx.data.unicef.org/webservice/data.html>*
+5. Ice sea level <br>
+  This contains ice sea levels of North and South pole. This is inbuilt dataset avaiaible in R.
 
 ```{r}
 #Extracting data:
@@ -119,20 +111,6 @@ natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep =
 continent <- read.csv(file = "data/Continents.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 df_south <- read.csv(file = "data/South_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 df_north <- read.csv(file = "data/North_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
-#Statistical description
-#dim(climate_change)
-#dim(cceri_data)
-#dim(natural_disaster_data)
-
-##Summary statistics with SKIM function
-#skim(climate_change)
-#skim(cceri_data)
-#skim(natural_disaster_data)
-
-##Checking NA values in the dataset
-#apply(is.na(climate_change),2, sum)
-#apply(is.na(cceri_data),2, sum)
-#apply(is.na(natural_disaster_data),2, sum)
 ```
 
 ## Visualisations
@@ -215,12 +193,6 @@ This broadening is most likely due to differential regional warming rather than 
 #### North pole Sea level
 
 ```{r message=FALSE}
-# North pole Sea level
-#north_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "N")
-#names(north_sea) <- seq(2017, 2022, 1)
-#df_north <- ldply(north_sea)
-
-#write.csv(df_north, "/Users/florianndeepika/My Drive/Semester_3/Data Story Telling and #Vis/project-VictorFloriann/data/North_pole_sea_level.csv", row.names=FALSE)
 
 #Plot data
 ggplot(df_north, aes(long, lat, group = group)) +
@@ -244,15 +216,6 @@ The visualizations show the warmer water rise overtime due to thermal expansion 
 
 ```{r message=FALSE}
 #### South Pole Sea Ice Level
-
-#south_sea <- sea_ice(year = 2017:2022, month = 'May', pole = "S")
-#print(south_sea)
-
-#names(south_sea) <- seq(2017, 2022, 1)
-#df_south <- ldply(south_sea)
-#print(df_south)
-
-#write.csv(df_south, "/Users/florianndeepika/My Drive/Semester_3/Data Story Telling and #Vis/project-VictorFloriann/data/South_pole_sea_level.csv", row.names=FALSE)
 
 # Plot data
 ggplot(df_south, aes(long, lat, group = group)) + 
