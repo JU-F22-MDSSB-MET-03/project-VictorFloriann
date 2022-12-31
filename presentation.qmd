@@ -1,23 +1,107 @@
 ---
-title: "Global climate heading in a Wrong Direction: Mechanism behind the occurrence of climatic change and analysis of Children Climate risk index"
+title: "Global climate heading in a Wrong Direction"
 author: "Victor & Floriann"
 format: 
   revealjs:
     slide-number: true
+    theme: simple
 ---
 
-## Climate changes
+## Climate change
 
-![Climate_Changes](img/Slide2.png)
+- Climate change is a change which is attributed directly or indirectly to human activity 
+- Climate change alters the composition of the global atmosphere and which is in addition to natural climate variability observed over comparative period of time.
 
+## Effects of Climate Change - Overall Rise in Temperature
+
+![Global surface temperature is rising](img/Global_surface_temperature_rise.png)
+
+## Sea ice level changes in North and South pole
+
+![Sea ice level comparison](img/Sea_Ice_Level_Comparision.png)
+
+## The green house effect
+
+![Carbon Dioxide Increase](img/CO2_Increase.png)
+
+## Green House gases effect
+
+![Harmfull gases](img/Harmfull_gases.png)
+
+# {auto-animate=true}
+
+::: {style="margin-top: 100px;"}
+Natural disaster due to climate changes
+:::
+
+# {auto-animate=true}
+
+::: {style="margin-top: 150px; font-size: 2em;"}
+Natural disaster due to climate changes
+:::
+
+
+## Continents affected by climate change disasters
+![climate changes disaster](img/Climate_disaster_Continent.png)
+
+## Countries affected in Asia by extreme temperature and flood
+:::: {.columns}
+
+::: {.column width="50%"}
+Extreme temperature
+![](img/extreme_temp.png)
+:::
+
+::: {.column width="50%"}
+flood
+![](img/flood.png)
+:::
+
+::::
+
+## People died due to climate change disasters in all continents
+
+![Continent with people died due to climate change disasters](img/people_died.png)
+
+## People died due to wildfire in North America
+
+::: {.panel-tabset}
+
+### Wildfire
+
+::: {.column width="70%"}
+![](img/died_wildfire.png)
+:::
+
+### Flood
+
+::: {.column width="70%"}
+![](img/died_flood.png)
+:::
+
+:::
 ## Climate Risks
 
 ![Climate_Risks.](https://visme.co/blog/wp-content/uploads/climate-risks-1.5-degree-vs-2-degree-global-warming-climate-change-facts-infographic.jpg)
 
-## Industrialization
+## Climate Environmental Shocks and Child_vulnerability
+:::: {.columns}
 
-![Industrialization](img/Slide3.png)
+::: {.column width="50%"}
+Environmental Shocks
+![](img/Env_shocks.png)
 
-## Children Climate Risk Index
+:::
 
-![CCRI](img/Slide4.png)
+::: {.column width="50%"}
+Child Vulnerability
+![](img/child_vulnerability.png)
+:::
+:::: 
+
+## Children Climate Risk Index (CCRI) - Worldwide
+
+![CCRI](img/CCRI.png)
+## Climate and our future
+
+

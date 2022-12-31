@@ -436,15 +436,18 @@ disaster_data_country <- disaster_data_country %>%
 #### Countries affected due to all disaster in all continents
 
 ```{r message=FALSE}
+
 # Calculate percentages
-pct_all_disas <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
 pct <- round(100*continent_data$affected_all_disasters/sum(continent_data$affected_all_disasters))
 
 # Pie chart
-pie(pct_all_disas$affected_all_disasters,
-    labels = paste(pct_all_disas$Entity, sep = " ", pct, "%"), 
-    col = rainbow(length(pct_all_disas$affected_all_disasters)), 
+pie(continent_data$affected_all_disasters,
+    labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(continent_data$affected_all_disasters)), 
     main = "Continents affected by climate change disasters")
+
+# Calculate percentages
+#pct_all_disas <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
 ```
 <p align='justify'>
 Climate change has contributed to the occurrence of natural disasters. Some of these disasters include drought, heatwaves, flood, fog, wildfire, glacial lake. These natural disasters have affected people all over the world. Natural disasters are becoming more common around the world. Floods and storms, as well as droughts and heat waves, are causing increasingly severe natural disasters, which are defined as causing at least 100 deaths or affecting the basic survival needs of at least 1,000 people. In recent decades, the Asia-Pacific region has seen some of the most devastating natural disasters, with dire consequences for human welfare. At the same time, the region's climate has been changing. Temperatures have been higher on average, but they have also been more variable and extreme.
@@ -654,15 +657,13 @@ There have also been a lot of people who have died from floods in America. Brazi
 # homeless_all_disasters
 
 # Calculate percentages
-pct_homeless <- filter(continent_data,Entity %in% c("Asia", "Africa", "North America", "South America", "Antarctica"))
 pct <- round(100*continent_data$homeless_all_disasters/sum(continent_data$homeless_all_disasters))
 
 # Pie chart
-pie(pct_homeless$homeless_all_disasters,
-    labels = paste(pct_homeless$Entity, sep = " ", pct, "%"), 
-    col = rainbow(length(pct_homeless$homeless_all_disasters)), 
+pie(continent_data$homeless_all_disasters,
+    labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
+    col = rainbow(length(continent_data$homeless_all_disasters)), 
     main = "Continents affected by climate change disasters")
-
 ```
 <p align='justify'>
 Earthquakes, tsunamis, floods, and tropical cyclones are the main disasters expected to uproot large numbers of people, with Asian countries, home to 60% of the world's population, bearing the brunt of the damage.
