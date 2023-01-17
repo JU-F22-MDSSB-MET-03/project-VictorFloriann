@@ -183,7 +183,7 @@ ggplot(climate_change, aes(x = Temp, y = as.factor(Year))) +
 ```
 
 <p align='justify'>
-This visualization shows how the distribution of land temperature anomalies has varied over time. As the planet has warmed, we see the peak of the distribution shifting to the right. The distribution of temperatures broadens as well. 
+This visualization shows how the distribution of land temperature anomalies has varied over time. As the planet has warmed, we see the peak of the distribution shifting to the right. The distribution of temperatures broadens as well.
 </p>
 <p align='justify'>
 This broadening is most likely due to differential regional warming rather than increased temperature variability at any given location.We can see extreme values since 2000, but after 2009 it has become significant.
