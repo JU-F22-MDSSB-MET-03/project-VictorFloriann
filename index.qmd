@@ -97,9 +97,9 @@ Data source will be accessed by from Github API with *R* language. There are 3 d
 3. Global temperature data<br>
     Link : *<https://data.giss.nasa.gov/gistemp/ https://data.giss.nasa.gov/gistemp/tabledata_v4/T_AIRS/GLB.Ts+dSST.csv>* <br>
 4. Children’s Climate and Environment Risk Index<br>
-    Link : *<https://sdmx.data.unicef.org/webservice/data.html>*
+    Link : *<https://sdmx.data.unicef.org/webservice/data.html>* <br>
 5. Ice sea level <br>
-  This contains ice sea levels of North and South pole. This is inbuilt dataset avaiaible in R.
+  This contains ice sea levels of North and South pole. This is inbuilt dataset available in R.
 ```{r}
 #Extracting data:
 climate_change <- read.csv(file = "data/climate_change.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
@@ -108,6 +108,7 @@ natural_disaster_data <- read.csv(file = "data/natural_disaster.csv",TRUE, sep =
 continent <- read.csv(file = "data/Continents.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 df_south <- read.csv(file = "data/South_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 df_north <- read.csv(file = "data/North_pole_sea_level.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
+df_poles_melted <- read.csv(file = "data/poles_melted.csv",TRUE, sep = ",", stringsAsFactors = FALSE)
 ```
 
 ## Visualisations
@@ -240,18 +241,7 @@ The powerful Southern Ocean Circumpolar Current keeps warmer ocean water from re
 #### Sea Ice Level changes comparision
 
 ```{r message=FALSE}
-
-north_data <- read.csv(url("https://www.ncdc.noaa.gov/snow-and-ice/extent/sea-ice/N/8.csv"),skip=3)
-south_data = read.csv(url("https://www.ncdc.noaa.gov/snow-and-ice/extent/sea-ice/S/8.csv"),skip=3)
-
-north_data$'North Sea Ice Level' = north_data$Anomaly
-south_data$'South Sea Ice Level' = south_data$Anomaly
-
-poles_data = merge(north_data[,-c(2,3)], south_data[,-c(2,3)], by="Date")
-
-poles_Melted <- reshape2::melt(poles_data, id.var='Date')
-
-ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) + 
+ggplot(df_poles_melted, aes(x=Date, y=value, col=variable)) + 
   geom_line(linetype="solid", size=1) +
   xlab("Year") +
   ylab("Change is Sea Ice Level") +
@@ -263,7 +253,7 @@ ggplot(poles_Melted, aes(x=Date, y=value, col=variable)) +
 The Northern Hemisphere experiences the most seasonal change in the amount of ice and snow cover. Put white caps on the top and bottom of the Earth. The bottom cap merely doubles from summer to winter, whereas the top cap grows by a factor of six. The snow cover is to cause for this variation.
 </p>
 <p align='justify'>
-Snow cover on land in the Northern Hemisphere ranges from less than 2 million km2 in the summer to 40 to 50 million km2 in the winter. The Southern Hemisphere has little snow cover. Land ice covers approximately 14 million km2 of Antarctica year round, with little variation from summer to winter. The extent of sea ice in the Arctic varies seasonally between 7 and 15 million km2, whereas the extent of sea ice in the Antarctic varies much more - from around 3 million km2 in summer to 18 million km2 in winter. This means that the Antarctic has less multi-year sea ice than the Arctic, where much of the sea ice is older than one year.
+Snow cover on land in the Northern Hemisphere ranges from less than 2 million km^2 in the summer to 40 to 50 million km^2 in the winter. The Southern Hemisphere has little snow cover. Land ice covers approximately 14 million km^2 of Antarctica year round, with little variation from summer to winter. The extent of sea ice in the Arctic varies seasonally between 7 and 15 million km^2, whereas the extent of sea ice in the Antarctic varies much more - from around 3 million km^2 in summer to 18 million km^2 in winter. This means that the Antarctic has less multi-year sea ice than the Arctic, where much of the sea ice is older than one year.
 </p>
 <p align='justify'>
 From the graph, the changes in Northern Sea ice level is consistently decreasing over the years, whereas the Southern sea ice level is consistently increasing.
@@ -307,10 +297,10 @@ Many of these greenhouse gases are naturally occurring, but human activities are
 Other greenhouse gases are emitted by human activities in smaller quantities. Methane is a more powerful greenhouse gas than CO2, but has a shorter atmospheric lifetime. Nitrous oxide, like CO2, is a long-lived greenhouse gas that accumulates in the atmosphere over decades to centuries. 
 </p>
 
-#### Carbon Dioxide level changes
+#### Carbon Dioxide level and Global surface temperature increase trend
 
 <p align='justify'>
-Beginning of the industrial revolution, the carbon dioxide emissions produced by industrial operations and the global burning of fossil fuels have dramatically increased at a constant rapid rate. 
+Beginning of the industrial revolution, the carbon dioxide emission produced by industrial operations and the global burning of fossil fuels have dramatically increased at a constant rapid rate. 
 </p>
 
 ```{r message=FALSE}
@@ -320,9 +310,9 @@ co2_chart <- ggplot(climate_change, aes(x = Year, y = Temp, fill = CO2)) +
   xlab(" ") +
   ylab("Temperature (°C)") +
   theme_minimal(base_size = 14)+ 
-  labs(title = "Carbon Dioxide level increase as per temperature - yearwise",
-              caption = "carbon dioxide measurements in parts per million (ppm)")
-
+  labs(title = "CO2 and temperature increasing trend - yearwise",
+              caption = "carbon dioxide measurements in parts per million (ppm)"
+       )
 barplot <- co2_chart +
   geom_bar( position = "dodge", stat = "identity",color= "white") 
   ggplotly(barplot)
@@ -330,10 +320,21 @@ barplot <- co2_chart +
 ```
 
 <p align='justify'>
-Emissions of carbon dioxide (CO2) increased rapidly starting in the 1950s and peaked in 2000 at 25.23 billion tons. Between 2000 and 2010, emissions increased by 32 percent.
+Emission of carbon dioxide (CO2) increased rapidly starting in the 1950s and peaked in 2008 at 385 parts per million (ppm). Between 2000 and 2010, emission has increased by 25 percent.
+</p>
+<p align='justify'>
+The above bar plot depicts that global surface temperature has been increasing over the years, the CO2 concentration has also been growing. Each bar represents each year from 1950 to 2010. In 1984, it can be seen that global temperature is between -.25°C with a CO2 level of 344.54 ppm and temperature level has gradually increased to .084°C with CO2 level at 344.05 ppm.
+Likewise, the recent record of 2007 shows that surface temperature is between .02°C to .06°C with increase in CO2 concentration from 383 ppm to 382.93 ppm significantly.
+</p>
+<p align='justify'>
+From the visual, we see in the 1990s, there were major fluctuations in the temperature and the darker blue colors signify a lower concentration of CO2 However, in the 2000s, we see the lighter blue bars signifying a high concentration of CO2 and the temperature consistently higher than 0.5°C.  
+</p>
+<p align='justify'>
+The reason for the spike in global temperature in 1998 according to scientists can be attributed to the effects earlier in the year of El Nino, the extensive pool of warm water that develops from time to time in the tropical Pacific due to global warming. It both warms the global atmosphere and disrupts worldwide weather patterns.
 </p>
 
-#### Vartations of CO_2, N2O, CH4 and Aerosols by year
+
+#### Variations of CO2, N2O, CH4 and Aerosols by year
 
 <p align='justify'>
 CO2, N2O and CH4 and Aerosols are harmful gases released into atmosphere due to industrial revolution. These are harmful gases to human being. The following graphs demonstrates the trend in these harmful gases in the year 2010. Here CO2, N2O and CH4 are expressed in ppmv (parts per million by volume  – i.e., 397 ppmv of CO2 means that CO2 constitutes 397 millionths of the total volume of the atmosphere). CFC.11 and CFC.12 are expressed in ppbv (parts per billion by volume).
@@ -367,10 +368,10 @@ CO2:
 This line graph depicts the monthly average carbon dioxide measurements in parts per million (ppm) since 1990. Summertime growth and winter decay of Northern Hemisphere vegetation drive the seasonal cycle of highs and lows (small peaks and valleys). Human activities are driving the long-term trend of rising CO2 levels.
 </p>
 <p align='justify'>
-From the line graph, the CO2 emissions has been on a rapid increase from 1990 at about 355ppm to about 387ppm in 2010. The red line signifies the global average co2 emissions concentration. An increase in greenhouse gas concentrations in the atmosphere causes positive climate forcing, or warming. 
+From the line graph, the CO2 emission has been on a rapid increase from 1990 at about 355ppm to about 387ppm in 2010. The red line signifies the global average co2 emission concentration. An increase in greenhouse gas concentrations in the atmosphere causes positive climate forcing, or warming. 
 </p>
 <p align='justify'>
-According to the Global Carbon Update 2021, annual emissions from burning fossil fuels have increased every decade since the mid-twentieth century, from an average of 3 billion tons of carbon (11 billion tons of carbon dioxide) per year in the 1960s to 9.5 billion tons of carbon (35 billion tons of carbon dioxide) per year in the 2010s. The total warming effect of greenhouse gases added to the Earth's atmosphere by humans increased by 45 percent between 1990 and 2019. The warming effect caused by carbon dioxide alone increased by 36%.
+According to the Global Carbon Update 2021, annual emission from burning fossil fuels have increased every decade since the mid-twentieth century, from an average of 3 billion tons of carbon (11 billion tons of carbon dioxide) per year in the 1960s to 9.5 billion tons of carbon (35 billion tons of carbon dioxide) per year in the 2010s. The total warming effect of greenhouse gases added to the Earth's atmosphere by humans increased by 45 percent between 1990 and 2019. The warming effect caused by carbon dioxide alone increased by 36%.
 </p>
 
 Methane:
@@ -450,7 +451,7 @@ pie(continent_data$affected_all_disasters,
 ```
 
 <p align='justify'>
-From the chart, the people of Asia have been most affected by climate change related natural disasters. About 80% of people affected come from Asia which is significantly higher than other continents.  Next is Africa with about 10% and North America with 8% of people affected.
+From the chart, the people of Asia have been most affected by climate change related natural disasters. About 79% of people affected come from Asia which is significantly higher than other continents.  Next is Africa with about 10% and North America with 8% of people affected.
 </p>
 
 ##### Countries affected due extreme temperature in Asia in 2010
@@ -488,7 +489,7 @@ p
 ```
 
 <p align='justify'>
-From the bar plot, China has had over 16 million people affected as a result of rising temperature. It is the most affected country in Asia with increased heat waves. This is closely followed by Mongolia with 12 million and Thailand with about 11 million people affected.
+From the bar plot, China had over 10% of its total population affected by extreme temperature in 2010. This amounts to about a whooping 214 million people. It is the most affected country in Asia with increased heat waves. This is closely followed by Mongolia with 12% of its total population and Thailand with about 11% people affected.
 </p>
 <p align='justify'>
 In recent years, China has reported more extreme weather events, such as high temperatures and heavy precipitation, indicating that the risk of climate change is increasing. Between 1961 and 2020, extreme heavy precipitation events increased, while significantly more extreme high temperatures have been reported since the mid-1990s. In the meantime, extreme low-temperature events have decreased. Greenhouse gases have contributed significantly to rising temperatures in China and elsewhere. Global average concentrations of such gases, including carbon dioxide and methane, have steadily increased over time.
@@ -529,7 +530,7 @@ p
 ```
 
 <p align='justify'>
-According to the bar plot, China and India account for 18 million and 16 million people, respectively, with both countries ranking first in terms of the absolute number of people at risk of rising water levels. Pakistan, Bangladesh, and Thailand round out the top five affected countries.
+According to the bar plot, China and India account for 18% (240.8 million) and 16% (198.56 million) of people respectively, with both countries ranking highest in terms of the absolute number of people at risk of rising water levels. Pakistan, Bangladesh, and Thailand round out the top five affected countries.
 </p>
 
 #### People died due to climate change disasters in all continents in 2010
@@ -550,7 +551,7 @@ pie(continent_data$deaths_all_disasters,
 ```
 
 <p align='justify'>
-From the chart, we see that North America has the highest percentage (50%) of people that died from climate change related natural disasters. This is then followed by Asia and then Europe. 
+From the chart, we see that North America has the highest percentage (51%) of people that died from climate change related natural disasters. This is then followed by Asia and then Europe. 
 </p>
 
 ##### People died due climate change disasters in North America in 2010
@@ -583,7 +584,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_all_disasters), y=deaths
 p
 ```
 <p align='justify'>
-There have been loss of lives in America especially in Haiti. Natural disasters will always be with us — and some will be worsened by the effects of human-made climate change. Major natural disaster that hits Haiti is earthquakes. Disasters like the earthquake are caused by nature but exacerbated by human inaction. Over 10 million people have died in Haiti from climate related natural disasters. This is then followed by the United States and Peru. 	Most of these deaths happen in Latin America and the Caribbean.
+There have been loss of lives in America especially in Haiti. Natural disasters will always be with us — and some will be worsened by the effects of human-made climate change. Major natural disaster that hits Haiti is earthquakes. Disasters like the earthquake are caused by nature but exacerbated by human inaction. Over 984,000 people have died in Haiti from climate related natural disasters. This is then followed by the United States and Peru. 	Most of these deaths happen in Latin America and the Caribbean.
 </p>
 
 ##### People died due wildfire in America in 2010
@@ -622,7 +623,7 @@ p
 ```
 
 <p align='justify'>
-The United States records the most people who died as a result of wildfires followed by Columbia and Chile.
+The United States records 9.2 million deaths as a result of wildfires. This is followed by Columbia and Chile.
 </p>
 
 ##### People died due flood in America  in 2010
@@ -656,7 +657,7 @@ p <- ggplot(top10_data, aes(x = reorder(Entity, +deaths_flood), y=deaths_flood, 
 p
 ```
 <p align='justify'>
-There have also been a lot of people who have died from floods in America. Brazil takes the lead with over 5 million who have died from floods over the years. Most countries that have suffered from floods are from Latin America and the Caribbean. 
+There have also been a lot of people who have died from floods in America. Brazil takes the lead with over 982,000 people who have died from floods over the years. Most countries that have suffered from floods are from Latin America and the Caribbean. 
 </p>
 
 #### People homeless due to all climate change disasters in all continents in 2010
@@ -676,11 +677,12 @@ pct <- round(100*continent_data$homeless_all_disasters/sum(continent_data$homele
 pie(continent_data$homeless_all_disasters,
     labels = paste(continent_data$Entity, sep = " ", pct, "%"), 
     col = rainbow(length(continent_data$homeless_all_disasters)), 
-    main = "Continents affected by climate change disasters in 2010")
+    main = "People affected by climate change homeless disasters by Continent in 2010")
 ```
 
 <p align='justify'>
-South and Southeast Asia is home to eight of the ten countries with the highest levels of displacement and housing loss. At the top of this list is India with a total of over 13 million people forced to leave their homes over the years. This is followed by China with a whooping 10 million, and Sri Lanka with about 11 million.
+South and Southeast Asia is home to eight of the ten countries with the highest levels of displacement and housing loss.About 74% of people displaced from housing comes only from Asia.
+
 </p>
 
 ##### People homeless due to all climate change disasters in Asia in 2010
@@ -714,42 +716,10 @@ p
 ```
 
 <p align='justify'>
-The above graph depicts that India , China ns Sri Lanks has the highest number in people who have lost thier house due to climate change disasters.
+
+The above graph depicts that India ,China and Srilanka have the highest number in people who have lost their house due to climate change disasters.
 </p>
 
-##### People homeless due to flood in Asia in 2010
-
-```{r message=FALSE}
-# Checking the top 10 countries having homeless_flood due to disaster:
-disaster_data_country_asia_homeless <- filter(disaster_data_country, (region %in% c(
-                                                              "Asia")))
-sorted = sort(disaster_data_country_asia_homeless$homeless_flood,decreasing = TRUE,index.return=TRUE)$ix
-
-#Subseting Top10 countries
-top10 <- disaster_data_country_asia_homeless[sorted[1:10],]
-top10 <- data.frame(Entity=disaster_data_country_asia_homeless$Entity[sorted[1:10]]) # construct a dataframe based on the top 10 countries
-top10$Entity <- as.character(top10$Entity) # make the country names as character
-#To plot:
-top10_data <- dplyr::inner_join(disaster_data_country_asia_homeless,top10,by="Entity") #join two tables together 
-
-#Barplot
-top10_data$homeless_flood <- log (top10_data$homeless_flood)
-p <- ggplot(top10_data, aes(x = reorder(Entity, +homeless_flood), y=homeless_flood, fill=Entity)) + 
-  geom_bar(stat = "identity") + 
-  xlab(" ") +
-  ylab("percentage of people homeless (%)") +
-  labs(title = 'People homeless due to flood in Asia in 2010',
-         caption = "Number of people is calculated in percentage",
-       ) + 
-  theme_classic() +
-  theme(legend.position="none") +
-  coord_flip()
-p
-```
-
-<p align='justify'>
-India and Sri Lanka face highest extreme flood. As a result, people have lost thier house and homeless. 
-</p>
 ### Children Climate Risk Index
 
 <p align='justify'>
@@ -901,7 +871,7 @@ Approximately 1 billion children (nearly half of the world's children) live in c
 Based on the CCRI map, children in the Central African Republic (8.7), Chad (8.5), Nigeria (8.5) , Guinea (8.4), and Guinea-Bissau (8.4) are most at risk, while children in New Zealand (1.6), Luxembourg (1.5), and Iceland (1.0) appear to be the safest. The most risky countries based on the CCRI are located in Africa. The safest countries happen to have small population numbers in common. New Zealand (5.1 million),  Luxembourg (645,000) and Iceland (376,000).
 </p>
 <p align='justify'>
-It is also worthy to note that the 33 ‘extremely high-risk’ countries based on CCRI collectively emit just 9% of global CO2 emissions. But the 10 highest emitting countries create nearly 70% of global emissions.
+It is also worthy to note that the 33 ‘extremely high-risk’ countries based on CCRI collectively emit just 9% of global CO2 emission. But the 10 highest emitting countries create nearly 70% of global emissions.
 </p>
 
 ## Conclusion
