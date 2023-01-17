@@ -1,4 +1,11 @@
-# Project Report
+# Global climate heading in a Wrong Direction: Mechanism behind the occurrence of climatic change and analysis of Children Climate risk index
 
-index.qmd and presentation.qmd should be rendered with quarto. This should produce a website index.html 
-with a standalone revealjs presentation presentation.html which is also embedded in index.html.
+The Earth’s climate is changing in unprecedented ways, according to scientists. Since the Industrial Revolution, the global average temperature has risen by one degree Celsius. Although this may not appear to be much, it has already had a significant impact on how our planet functions. This data visualization report assists us in answering three major questions: the causes and effects of climate change, the trend of natural disasters caused by global warming, and the climatic change in relation to Children Climate Risk Index (CCRI) data.
+
+Natural disasters have been exacerbated by climate change. Drought, heatwaves, flood, fog, wildfire, and glacial lake are some of these disasters. People all over the world have been affected by these natural disasters. According to the analysis, Asia is the most affected by most climate-related disasters, with China being the most affected by extreme temperature and flooding. Furthermore, North America has the highest number of deaths from climate-related natural disasters, with Haiti having the highest number of deaths on the continent. In addition, Southern Asia has the highest number of people who have become homeless as a result of these natural disasters, with India being the most affected. Surprisingly, the continent with the greatest impact (30%) is North America.
+
+The CCRI index seeks to identify which countries or regions are at risk of humanitarian crises affecting children and child deprivation worsening as a result of their vulnerability to climate and environmental shocks or pressures. According to the CCRI map, children in the Central African Republic (8.7), Chad (8.5), Nigeria (8.5), Guinea (8.4), and Guinea-Bissau (8.4) are the most vulnerable to climate change effects, while children in New Zealand (1.6), Luxembourg (1.5), and Iceland (1.0) appear to be the safest.
+
+As a result of enormous global environmental, sociological, and economic disruption brought on by climate change, the world is approaching an unprecedented period. By investigating and analyzing the sources of greenhouse gas emissions brought on by the industrial revolution, we can help and protect society in general and children in particular.
+
+Policymakers must develop better listening skills and incorporate the viewpoints and experiences of young people into climate policies and processes in order to confront this catastrophe.
